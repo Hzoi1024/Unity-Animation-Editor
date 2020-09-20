@@ -131,6 +131,7 @@ public class AminaEditor : EditorWindow
         NilStyle.alignment = TextAnchor.MiddleCenter;
         //NilStyle.border = new RectOffset(1,1,1,1);
         Debug.Log("onenable");
+        Debug.Log("cos Pi:" + Mathf.Cos(Mathf.PI));
 
         GetRightBlockFrameMaxNumber();
 
@@ -388,6 +389,7 @@ public class AminaEditor : EditorWindow
                         Vector2Int _addkeyPara = new Vector2Int(conponentIndex, _frameIndex);
                         menu.AddItem(new GUIContent("Add key"), false, Addkey, _addkeyPara);
                         menu.AddItem(new GUIContent("Add key Accelerate"), false, AddkeyAccelerate, _addkeyPara);
+                        menu.AddItem(new GUIContent("Add key Trigonote"), false, AddkeyTrigono, _addkeyPara);
 
                         if (Components[conponentIndex].clip.IsTheIndexHaveKey(_frameIndex))
                         {
@@ -573,6 +575,18 @@ public class AminaEditor : EditorWindow
         GetRightBlockFrameMaxNumber();
     }
 
+    public void AddkeyTrigono(object k)
+    {
+        Vector2Int v2 = (Vector2Int)k;
+        /*Transform _t = Components[v2.x].ComponentGO.transform;
+        Vector2 _pos = _t.localPosition;
+        float _ang = TransformUtils.GetInspectorRotation(_t).z;
+
+        Components[v2.x].clip.AddKeyFrameAcceleration(_pos, _ang, v2.y);*/
+        editorUndo.Addkey(v2, KeyType.TrigonoKey);
+        GetRightBlockFrameMaxNumber();
+    }
+
     public void DeleteKey(object k)
     {
         Vector2Int v2 = (Vector2Int)k;
@@ -744,6 +758,9 @@ public class AminaEditor : EditorWindow
                             case KeyType.AccelerateKey:
                                 _col = new Color(0.4f, 0.8f, 0.4f);
                                 break;
+                            case KeyType.TrigonoKey:
+                                _col = new Color(0.3f,0.7f,0.7f);
+                                break;
                         }
 
                         float _dX = RightRootBlock.x + frameBlockWidth * (_key.index + 1+draggingKeyFramesOffset);
@@ -760,6 +777,9 @@ public class AminaEditor : EditorWindow
                                 break;
                             case KeyType.AccelerateKey:
                                 _col = new Color(0.4f, 0.2f, 0);
+                                break;
+                            case KeyType.TrigonoKey:
+                                _col = new Color(0.3f, 0.0f, 0.0f);
                                 break;
                         }
                         float _dX = RightRootBlock.x + frameBlockWidth * (_key.index + 1);

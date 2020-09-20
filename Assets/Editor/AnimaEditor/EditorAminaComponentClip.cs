@@ -13,7 +13,7 @@ public class EditorAminaComponentClip:ScriptableObject
     //public List<int> keyNum;
     public List<Key> keys;
     public List<AminaFrame> frames;
-    
+
     public class Key:IComparable<Key>
     {
         public int index;
@@ -73,6 +73,12 @@ public class EditorAminaComponentClip:ScriptableObject
             case KeyType.AccelerateKey:
                 AddNewKeyAcceleration(_pos, _angle, _newKey);
                 break;
+            case KeyType.TrigonoKey:
+                AddNewKeyTrigono(_pos, _angle, _newKey);
+                break;
+            default:
+                Debug.LogError("unknown KeyType");
+                break;
         }
 
         
@@ -105,7 +111,8 @@ public class EditorAminaComponentClip:ScriptableObject
                 _af.angle = _angle;
                 frames[i] = _af;
             }
-
+            InsertFirstKeyFrame();
+            /*
             int nextIndex = keys[k + 1].index;
             AminaFrame _end = frames[nextIndex];
             float _deltaAng = (_end.angle - _angle) / (nextIndex - _newKey.index);
@@ -117,7 +124,7 @@ public class EditorAminaComponentClip:ScriptableObject
                 //_af.angle = Vector2.Lerp(frames[i - 1].angle, _end.angle, 1f / (nextIndex - i + 1));
                 _af.angle = frames[i - 1].angle + _deltaAng;
                 frames[i] = _af;
-            }
+            }*/
 
         }
         else
@@ -266,6 +273,9 @@ public class EditorAminaComponentClip:ScriptableObject
                 case KeyType.LinearKey:
                     LinearFillFrame(preIndex, nextKey.index);
                     break;
+                case KeyType.TrigonoKey:
+                    TrangonoFillFrame(preIndex, nextKey.index);
+                    break;
                 default:
                     Debug.LogError("delete nextkey type not right");
                     break;
@@ -383,7 +393,8 @@ public class EditorAminaComponentClip:ScriptableObject
                 _af.angle = _angle;
                 frames[i] = _af;
             }
-
+            InsertFirstKeyFrame();
+            /*
             int nextIndex = keys[k + 1].index;
             AminaFrame _end = frames[nextIndex];
             //float _deltaAng = (_end.angle - _angle) / (nextIndex - _index);
@@ -409,7 +420,7 @@ public class EditorAminaComponentClip:ScriptableObject
                 //_af.angle = Vector2.Lerp(frames[i - 1].angle, _end.angle, 1f / (nextIndex - i + 1));
 
                 frames[_index + i] = _af;
-            }
+            }*/
 
         }
         else
@@ -554,6 +565,75 @@ public class EditorAminaComponentClip:ScriptableObject
         }
     }
 
+    void AddNewKeyTrigono(Vector2 _pos, float _angle, Key _newKey)
+    {
+        if (keys.Count == 1)
+        {
+            frames = new List<AminaFrame>();
+
+            for (int i = 0; i <= keys[0].index; i++)
+            {
+                AminaFrame _af = new AminaFrame();
+                _af.pos = new Vector2(_pos.x, _pos.y);
+                _af.angle = _angle;
+                frames.Add(_af);
+            }
+            return;
+        }
+
+        int _index = _newKey.index;
+
+        int k = GetIndexOf(_index);
+        if (k == 0)
+        {
+            for (int i = 0; i <= _index; i++)
+            {
+                AminaFrame _af = new AminaFrame();
+                _af.pos = new Vector2(_pos.x, _pos.y);
+                _af.angle = _angle;
+                frames[i] = _af;
+            }
+
+            int nextIndex = keys[k + 1].index;
+
+            InsertFirstKeyFrame();
+        }else if(k== keys.Count - 1)
+        {
+            int previousIndex = keys[k - 1].index;
+            AminaFrame _end = new AminaFrame();
+            _end.pos = new Vector2(_pos.x, _pos.y);
+            _end.angle = _angle;
+            //float _deltaAng = (_angle - frames[previousIndex].angle) / (_index - previousIndex);
+
+            bool isAdd = false;
+            if (_index > frames.Count - 1) isAdd = true;
+
+            if (isAdd)
+            {
+                for(int i=0;i< _index- previousIndex-1;i++)
+                {
+                    frames.Add(null);
+                }
+                frames.Add(_end);
+            }
+            else
+            {
+                frames[_index] = _end;
+            }
+
+            TrangonoFillFrame(previousIndex, _index);
+        }
+        else
+        {
+            AminaFrame _k = new AminaFrame();
+            _k.pos = new Vector2(_pos.x, _pos.y);
+            _k.angle = _angle;
+            frames[_index] = _k;
+
+            InsertFrame(k);
+
+        }
+    }
 
     void InsertFrame(int _InsertKeyIndex)
     {
@@ -566,6 +646,9 @@ public class EditorAminaComponentClip:ScriptableObject
                 AccelerateFillFrame(_preIndex, _currentKey.index);
                 break;
             case KeyType.LinearKey:
+                LinearFillFrame(_preIndex, _currentKey.index);
+                break;
+            case KeyType.TrigonoKey:
                 LinearFillFrame(_preIndex, _currentKey.index);
                 break;
             default:
@@ -582,10 +665,35 @@ public class EditorAminaComponentClip:ScriptableObject
             case KeyType.LinearKey:
                 LinearFillFrame(_currentKey.index, _nextKey.index);
                 break;
+            case KeyType.TrigonoKey:
+                TrangonoFillFrame(_currentKey.index, _nextKey.index);
+                break;
             default:
                 Debug.LogError("nextKey.type  not right");
                 break;
         }
+    }
+
+    void InsertFirstKeyFrame()
+    {
+        int _index = keys[0].index;
+        Key _nextKey = keys[1];
+        switch (_nextKey.type)
+        {
+            case KeyType.AccelerateKey:
+                AccelerateFillFrame(_index, _nextKey.index);
+                break;
+            case KeyType.LinearKey:
+                LinearFillFrame(_index, _nextKey.index);
+                break;
+            case KeyType.TrigonoKey:
+                TrangonoFillFrame(_index, _nextKey.index);
+                break;
+            default:
+                Debug.LogError("nextKey.type  not right");
+                break;
+        }
+
     }
 
     void LinearFillFrame(int _start,int _end)
@@ -637,8 +745,37 @@ public class EditorAminaComponentClip:ScriptableObject
 
             frames[_start + i] = _af;
         }
+    }
 
+    void TrangonoFillFrame(int _start, int _end)
+    {
+        AminaFrame _startKey = frames[_start];
+        AminaFrame _endKey = frames[_end];
 
+        int _deltaFrames = _end - _start;
+
+        float _deltaRadias = Mathf.PI / _deltaFrames;
+
+        float _startX = _startKey.pos.x;
+        float _startY = _startKey.pos.y;
+        float _startA = _startKey.angle;
+        float _disX = _endKey.pos.x - _startX;
+        float _disY = _endKey.pos.y - _startY;
+        float _disA = _endKey.angle - _startA;
+
+        for (int i = 1; i < _deltaFrames; i++)
+        {
+            AminaFrame _af = new AminaFrame();
+            float _d =  1 - Mathf.Cos(_deltaRadias * i);
+            float _x = _startX + _d  / 2 * _disX;
+            float _y = _startY + _d  / 2 * _disY;
+            float _a = _startA + _d  / 2 * _disA;
+            _af.pos = new Vector2(_x, _y);
+            _af.angle = _a;
+            //_af.angle = Vector2.Lerp(frames[i - 1].angle, _end.angle, 1f / (nextIndex - i + 1));
+
+            frames[_start + i] = _af;
+        }
     }
 
     float GetUniformAcceleration(float _start,float _end,float _startSpeed, int _count)
@@ -646,6 +783,11 @@ public class EditorAminaComponentClip:ScriptableObject
         float _acceleration = ((_end-_start) / _count - _startSpeed)*2 / _count;//加速度
 
         return _acceleration;
+    }
+
+    float GetTrigonoDelta(int _deltaIndex)
+    {
+        return Mathf.PI / _deltaIndex;
     }
 
     public int GetIndexOf(int k)
@@ -694,6 +836,7 @@ public enum KeyType
 {
     LinearKey=0,
     AccelerateKey=1,
+    TrigonoKey=2,
 }
 
 public class EditorAminaActionClip
