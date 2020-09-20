@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9cd6cea52c24f5b40a73ef513a9d9ebb, type: 3}
+  m_Name: EditorAminaComponentClip
+  m_EditorClassIdentifier: 
+  CompID: 0
+  framesCount: 0
+  animaComponent: {fileID: 7352484702915839600, guid: cc56fed1c2f0acd4faf44a240737b9bd,
+    type: 3}
+  keyNum: 
