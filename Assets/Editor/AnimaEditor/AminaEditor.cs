@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
@@ -994,7 +994,7 @@ public class AminaEditor : EditorWindow
                 {
                     if (aminaEditor_LoadFrames == null)
                     {
-                        aminaEditor_LoadFrames = GetWindow<AminaEditor_LoadFrames>(false, Components[i].labelStr+ " Load Frames",true);
+                        aminaEditor_LoadFrames = GetWindow<AminaEditor_LoadFrames>(false, Components[i].componentName+ " Load Frames",true);
                         aminaEditor_LoadFrames.minSize = new Vector2(250, 250);
                         aminaEditor_LoadFrames.position = new Rect(position.x+LeftRootBlock.width, position.y, 250, 250);
                     }
@@ -1006,17 +1006,17 @@ public class AminaEditor : EditorWindow
                     componentParaCount ++;
                     _col = (float)(0.9 - 0.06 * ((i + componentParaCount) % 2));
                     EditorGUI.DrawRect(new Rect(0, topBlockHeight + conponentClipBoxHeight * (i + componentParaCount), LeftRootBlockWidth, conponentClipBoxHeight), new Color(_col, _col, _col));
-                    GUI.Label(new Rect(40, topBlockHeight + conponentClipBoxHeight * (i + componentParaCount), 200, conponentClipBoxHeight), Components[i].labelStr+ ".vector.x", LabelStyle);
+                    GUI.Label(new Rect(40, topBlockHeight + conponentClipBoxHeight * (i + componentParaCount), 200, conponentClipBoxHeight), Components[i].componentName+ ".vector.x", LabelStyle);
 
                     componentParaCount++;
                     _col = (float)(0.9 - 0.06 * ((i + componentParaCount) % 2));
                     EditorGUI.DrawRect(new Rect(0, topBlockHeight + conponentClipBoxHeight * (i + componentParaCount), LeftRootBlockWidth, conponentClipBoxHeight), new Color(_col, _col, _col));
-                    GUI.Label(new Rect(40, topBlockHeight + conponentClipBoxHeight * (i + componentParaCount), 200, conponentClipBoxHeight), Components[i].labelStr + ".vector.y", LabelStyle);
+                    GUI.Label(new Rect(40, topBlockHeight + conponentClipBoxHeight * (i + componentParaCount), 200, conponentClipBoxHeight), Components[i].componentName + ".vector.y", LabelStyle);
 
                     componentParaCount++;
                     _col = (float)(0.9 - 0.06 * ((i + componentParaCount) % 2));
                     EditorGUI.DrawRect(new Rect(0, topBlockHeight + conponentClipBoxHeight * (i + componentParaCount), LeftRootBlockWidth, conponentClipBoxHeight), new Color(_col , _col, _col));
-                    GUI.Label(new Rect(40, topBlockHeight + conponentClipBoxHeight * (i + componentParaCount), 200, conponentClipBoxHeight), Components[i].labelStr + ".angle", LabelStyle);
+                    GUI.Label(new Rect(40, topBlockHeight + conponentClipBoxHeight * (i + componentParaCount), 200, conponentClipBoxHeight), Components[i].componentName + ".angle", LabelStyle);
 
                 }
 
@@ -1429,6 +1429,7 @@ public class AminaEditor : EditorWindow
             {
                 ClearSelectKey();
                 Components[i].clip.Load(_other);
+                Components[i].labelStr = Components[i].componentName + _other.name;
                 GetRightBlockFrameMaxNumber();
                 return;
             }
@@ -1441,6 +1442,7 @@ public class AminaEditor : EditorWindow
         public GameObject ComponentGO;
         public int componentID;
         public EditorAminaComponentClip clip;
+        public string componentName;
         public string labelStr;
         public List<SelectedKeyData> SelectionKeyFrame;
         public bool showComponentPara;
@@ -1452,31 +1454,32 @@ public class AminaEditor : EditorWindow
             {
                 case 1://头                    
                     ComponentGO = protype.transform.Find("Sp/Head").gameObject;
-                    labelStr = "Head";
+                    componentName = "Head:";
                     break;
                 case 2://身体
                     ComponentGO = protype.transform.Find("Sp/Body").gameObject;
-                    labelStr = "Body";
+                    componentName = "Body:";
                     break;
                 case 3://前手
                     ComponentGO = protype.transform.Find("Sp/FHand").gameObject;
-                    labelStr = "FHand";
+                    componentName = "FHand:";
                     break;
                 case 4://后手
                     ComponentGO = protype.transform.Find("Sp/BHand").gameObject;
-                    labelStr = "BHand";
+                    componentName = "BHand:";
                     break;
                 case 5://前脚
                     ComponentGO = protype.transform.Find("Sp/FLeg").gameObject;
-                    labelStr = "FLeg";
+                    componentName = "FLeg:";
                     break;
                 case 6://后脚
                     ComponentGO = protype.transform.Find("Sp/BLeg").gameObject;
-                    labelStr = "BLeg";
+                    componentName = "BLeg:";
                     break;
 
             }
             SelectionKeyFrame = new List<SelectedKeyData>();
+            labelStr = componentName + "New Frames";
             //clip = new EditorAminaComponentClip();
             clip = ScriptableObject.CreateInstance<EditorAminaComponentClip>();
             clip.Init(0, componentID, ComponentGO.transform.localPosition, ComponentGO.transform.localEulerAngles.z);
