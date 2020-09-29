@@ -1,44 +1,32 @@
-﻿using UnityEditor;
+using UnityEditor;
 using UnityEngine;
+using System.Collections;
 
-
-// Shows info of a GameObject depending on the selected option
-
-public enum OPTIONS
+public class GUIWindowDemo : EditorWindow
 {
-    Position = 0,
-    Rotation = 1,
-    Scale = 2,
-}
-
-
-public class EditorGUIEnumPopup : EditorWindow
-{
-    OPTIONS display = OPTIONS.Position;
-
-    [MenuItem("Examples/Editor GUI Enum Popup usage")]
-    static void Init()
-    {
-        EditorWindow window = GetWindow(typeof(EditorGUIEnumPopup));
-        window.position = new Rect(0, 0, 220, 80);
-        window.Show();
-    }
-    
-
+    // The position of the window
+    public Rect windowRect = new Rect(100, 100, 200, 200);
     void OnGUI()
     {
-        Rect k = new Rect();
+        BeginWindows();
 
-        k.x =10;
-        k.y = 10;
-        k.width = position.width-20;
-        k.height = position.height- 20;
-        
+        // All GUI.Window or GUILayout.Window must come inside here
+        windowRect = GUILayout.Window(1, windowRect, DoWindow, "Hi There");
 
+        EndWindows();
+    }
 
+    // The window function. This works just like ingame GUI.Window
+    void DoWindow(int unusedWindowID)
+    {
+        GUILayout.Button("Hi");
+        GUI.DragWindow();
+    }
 
-        GUI.Box(k, "");
-        
-
+    // Add menu item to show this demo.
+    [MenuItem("Test/GUIWindow Demo")]
+    static void Init()
+    {
+        EditorWindow.GetWindow(typeof(GUIWindowDemo));
     }
 }

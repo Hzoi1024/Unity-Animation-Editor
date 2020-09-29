@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
@@ -16,14 +16,58 @@ public class AminaEditorUndo
         pointer = -1;
     }
     
-    public void Addkey(Vector2Int v2, KeyType _type)
+    public void Addkey(Vector3Int v3, KeyType _type,IFrameFillPara _fPara)
     {
-        AddOperation(new AEUndoOperation_Addkey(aminaEditor, v2, _type));
+        switch (v3.z)
+        {
+            case 0:
+                List<AminaEditorUndoOperation> _addList = new List<AminaEditorUndoOperation>();
+                _addList.Add(new AEUndoOperation_Addkey(aminaEditor,new Vector2Int(v3.x,v3.y), _type, FrameParaType.x, _fPara));
+                _addList.Add(new AEUndoOperation_Addkey(aminaEditor, new Vector2Int(v3.x, v3.y), _type, FrameParaType.y, _fPara));
+                _addList.Add(new AEUndoOperation_Addkey(aminaEditor, new Vector2Int(v3.x, v3.y), _type, FrameParaType.a, _fPara));
+                AddOperation(new AEUndoOperation_Complex(aminaEditor, _addList));
+                break;
+            case 1:
+                AddOperation(new AEUndoOperation_Addkey(aminaEditor, new Vector2Int(v3.x, v3.y), _type, FrameParaType.x, _fPara));
+                break;
+            case 2:
+                AddOperation(new AEUndoOperation_Addkey(aminaEditor, new Vector2Int(v3.x, v3.y), _type, FrameParaType.y, _fPara));
+                break;
+            case 3:
+                AddOperation(new AEUndoOperation_Addkey(aminaEditor, new Vector2Int(v3.x, v3.y), _type, FrameParaType.a, _fPara));
+                break;
+            default:
+                Debug.LogWarning("v3.z out of range value="+ v3.z);
+                break;
+
+        }
     }
 
-    public void DeleteKey(Vector2Int v2)
+    public void DeleteKey(Vector3Int v3)
     {
-        AddOperation(new AEUndoOperation_Deletekey(aminaEditor, v2));
+        switch (v3.z)
+        {
+            case 0:
+                List<AminaEditorUndoOperation> _delList = new List<AminaEditorUndoOperation>();
+                _delList.Add(new AEUndoOperation_Deletekey(aminaEditor, new Vector2Int(v3.x, v3.y),FrameParaType.x));
+                _delList.Add(new AEUndoOperation_Deletekey(aminaEditor, new Vector2Int(v3.x, v3.y), FrameParaType.y));
+                _delList.Add(new AEUndoOperation_Deletekey(aminaEditor, new Vector2Int(v3.x, v3.y), FrameParaType.a));
+                AddOperation(new AEUndoOperation_Complex(aminaEditor, _delList));
+                break;
+            case 1:
+                AddOperation(new AEUndoOperation_Deletekey(aminaEditor, new Vector2Int(v3.x, v3.y), FrameParaType.x));
+                break;
+            case 2:
+                AddOperation(new AEUndoOperation_Deletekey(aminaEditor, new Vector2Int(v3.x, v3.y), FrameParaType.y));
+                break;
+            case 3:
+                AddOperation(new AEUndoOperation_Deletekey(aminaEditor, new Vector2Int(v3.x, v3.y), FrameParaType.a));
+                break;
+            default:
+                Debug.LogWarning("v3.z out of range value=" + v3.z);
+                break;
+
+        }
     }
 
     public void AddWholeKey(int _index)
@@ -32,7 +76,9 @@ public class AminaEditorUndo
         for(int i = 0; i < aminaEditor.Components.Count; i++)
         {
             Vector2Int k = new Vector2Int(i, _index);
-            _addList.Add(new AEUndoOperation_Addkey(aminaEditor, k,KeyType.LinearKey));
+            _addList.Add(new AEUndoOperation_Addkey(aminaEditor, k,KeyType.LinearKey,FrameParaType.x,null));
+            _addList.Add(new AEUndoOperation_Addkey(aminaEditor, k, KeyType.LinearKey, FrameParaType.y, null));
+            _addList.Add(new AEUndoOperation_Addkey(aminaEditor, k, KeyType.LinearKey, FrameParaType.a, null));
         }
 
         if (_addList.Count > 0)
@@ -45,12 +91,23 @@ public class AminaEditorUndo
     {
         List<AminaEditorUndoOperation> _delList = new List<AminaEditorUndoOperation>();
 
+
         for (int i = 0; i < aminaEditor.Components.Count; i++)
         {
-            for (int j = 0; j < aminaEditor.Components[i].SelectionKeyFrameCount; j++)
+            //Debug.Log("Components[i].SelectionKeyFrame.Count" + aminaEditor.Components[i].SelectionKeyFrame.Count);
+            for (int j = 0; j < aminaEditor.Components[i].SelectionKeyFrame.Count; j++)
             {
-                Vector2Int k = new Vector2Int(i, aminaEditor.Components[i].GetSelectKey(j));
-                _delList.Add(new AEUndoOperation_Deletekey(aminaEditor,k));
+
+
+                SelectedKeyData _k = aminaEditor.Components[i].SelectionKeyFrame[j];
+
+                Vector2Int v2 = new Vector2Int(i, _k.Index);
+                if(_k.x) _delList.Add(new AEUndoOperation_Deletekey(aminaEditor, v2, FrameParaType.x));
+                if (_k.y) _delList.Add(new AEUndoOperation_Deletekey(aminaEditor, v2, FrameParaType.y));
+                if (_k.a) _delList.Add(new AEUndoOperation_Deletekey(aminaEditor, v2, FrameParaType.a));
+
+
+                //delList.Add(new AEUndoOperation_Deletekey(aminaEditor,k));
             }
         }
 
@@ -70,8 +127,7 @@ public class AminaEditorUndo
             Vector2Int v2 = new Vector2Int();
             v2.x = _kd.componentIndex; v2.y = _keyPointer + _kd.offset;
 
-            _Addkeys.Add(new AEUndoOperation_Addkey(aminaEditor, v2, _kd.frame.pos, _kd.frame.angle,_kd.type));
-
+            _Addkeys.Add(new AEUndoOperation_Addkey(aminaEditor, v2,_kd.para, _kd.type, _kd.paraType,_kd.fillPara));
         }
 
         AddOperation(new AEUndoOperation_Complex(aminaEditor, _Addkeys));
@@ -79,20 +135,33 @@ public class AminaEditorUndo
 
     public void MoveSelectedKey(int _delta)
     {
-        List<List<Vector2Int>> _list = new List<List<Vector2Int>>();
+        List<List<MoveKeyData>> _list = new List<List<MoveKeyData>>();
 
         for(int i = 0; i < aminaEditor.Components.Count; i++)
         {
-            _list.Add(new List<Vector2Int>());
+            _list.Add(new List<MoveKeyData>());
 
-            for(int j=0;j< aminaEditor.Components[i].SelectionKeyFrameCount; j++)
+            for(int j=0;j< aminaEditor.Components[i].SelectionKeyFrame.Count; j++)
             {
-                Vector2Int k = new Vector2Int( aminaEditor.Components[i].GetSelectKey(j),i);
-                _list[i].Add(k);
+                SelectedKeyData _s = aminaEditor.Components[i].SelectionKeyFrame[j];
+                if (_s.Index + _delta >= 0)
+                {
+                    MoveKeyData _m = new MoveKeyData(i, _s.Index);
+                    if (_s.x) _m.Selected.Add(FrameParaType.x);
+                    if (_s.y) _m.Selected.Add(FrameParaType.y);
+                    if (_s.a) _m.Selected.Add(FrameParaType.a);
+                    _list[i].Add(_m);
+                }
+                
+
+
+                //Vector2Int k = new Vector2Int( aminaEditor.Components[i].GetSelectKey(j),i);
+                
             }
         }
 
-        AddOperation(new AEUndoOperation_MoveKeys(aminaEditor, _list, _delta));
+        //AddOperation(new AEUndoOperation_MoveKeys(aminaEditor, _list, _delta));
+        AddOperation(new AEUndoOperation_MoveKey(aminaEditor, _list, _delta));
     }
 
     public void UndoOperation()
@@ -174,91 +243,167 @@ public class AEUndoOperation_Addkey : AminaEditorUndoOperation
 
     Vector2Int index;
 
+    FrameParaType paraType;
 
-    public AEUndoOperation_Addkey(AminaEditor ae, Vector2Int _index,KeyType _type) : base(ae)
+    public AEUndoOperation_Addkey(AminaEditor ae, Vector2Int _index,KeyType _type, FrameParaType _ptype, IFrameFillPara _fillPara) : base(ae)
     {
         index = _index;
-        Transform _t = aminaEditor.Components[_index.x].ComponentGO.transform;
-        Vector2 _pos = _t.localPosition;
-        float _ang = TransformUtils.GetInspectorRotation(_t).z;
-        if (!aminaEditor.Components[_index.x].clip.IsTheIndexHaveKey(_index.y))
+        paraType = _ptype;
+
+        float _value = 0;
+        switch (_ptype)
         {
-            helper = new AEUndoOperation_Addkey_NewAdd(_pos, _ang, _type);
+            case FrameParaType.x:
+                _value = aminaEditor.Components[_index.x].ComponentGO.transform.localPosition.x;
+                break;
+            case FrameParaType.y:
+                _value = aminaEditor.Components[_index.x].ComponentGO.transform.localPosition.y;
+                break;
+            case FrameParaType.a:
+                _value = TransformUtils.GetInspectorRotation(aminaEditor.Components[_index.x].ComponentGO.transform).z;
+                break;
+        }
+        
+        if (!aminaEditor.Components[_index.x].clip.IsTheIndexHaveKey(_index.y, paraType))
+        {
+            helper = new AEUndoOperation_Addkey_NewAdd(_value, _type,_fillPara);
         }
         else
         {
-            Vector2 _oldPos = aminaEditor.Components[index.x].clip.frames[index.y].pos;
-            float _oldAng = aminaEditor.Components[index.x].clip.frames[index.y].angle;
-            KeyType _oldType = aminaEditor.Components[index.x].clip.GetIndexType(index.y);
-            helper = new AEUndoOperation_AddKey_Coveredkey(_pos, _ang, _type, _oldPos, _oldAng, _oldType);
+            float _oldValue = 0;
+            KeyType _oldType= KeyType.NotKey;
+            IFrameFillPara _oldFillPara = null;
+            switch (_ptype)
+            {
+                case FrameParaType.x:
+                    _oldValue = aminaEditor.Components[index.x].clip.Frames[index.y].x;
+                    _oldType = aminaEditor.Components[index.x].clip.Frames[index.y].XKey;
+                    _oldFillPara = aminaEditor.Components[index.x].clip.Frames[index.y].XfillPara;
+                    break;
+                case FrameParaType.y:
+                    _oldValue = aminaEditor.Components[index.x].clip.Frames[index.y].y;
+                    _oldType = aminaEditor.Components[index.x].clip.Frames[index.y].YKey;
+                    _oldFillPara = aminaEditor.Components[index.x].clip.Frames[index.y].YfillPara;
+                    break;
+                case FrameParaType.a:
+                    _oldValue = aminaEditor.Components[index.x].clip.Frames[index.y].angle;
+                    _oldType = aminaEditor.Components[index.x].clip.Frames[index.y].AKey;
+                    _oldFillPara = aminaEditor.Components[index.x].clip.Frames[index.y].AfillPara;
+                    break;
+            }
+
+            helper = new AEUndoOperation_AddKey_Coveredkey(_value, _type,_fillPara, _oldValue, _oldType, _oldFillPara);
         }
     }
 
-    public AEUndoOperation_Addkey(AminaEditor ae, Vector2Int _index, Vector2 _pos,float _ang,KeyType _type) : base(ae)
+    public AEUndoOperation_Addkey(AminaEditor ae, Vector2Int _index,float _value,KeyType _type, FrameParaType _ptype,IFrameFillPara _fillPara) : base(ae)
     {
         index = _index;
-        if (!aminaEditor.Components[_index.x].clip.IsTheIndexHaveKey(_index.y))
+        paraType = _ptype;
+
+        if (!aminaEditor.Components[_index.x].clip.IsTheIndexHaveKey(_index.y,paraType))
         {
-            helper = new AEUndoOperation_Addkey_NewAdd(_pos, _ang, _type);
+            helper = new AEUndoOperation_Addkey_NewAdd(_value, _type, _fillPara);
         }
         else
         {
-            Vector2 _oldPos = aminaEditor.Components[index.x].clip.frames[index.y].pos;
-            float _oldAng = aminaEditor.Components[index.x].clip.frames[index.y].angle;
-            KeyType _oldType = aminaEditor.Components[index.x].clip.GetIndexType(index.y);
-            helper = new AEUndoOperation_AddKey_Coveredkey(_pos, _ang, _type, _oldPos, _oldAng, _oldType);
+            float _oldValue = 0;
+            KeyType _oldType = KeyType.NotKey;
+            IFrameFillPara _oldFillPara = null;
+            switch (_ptype)
+            {
+                case FrameParaType.x:
+                    _oldValue = aminaEditor.Components[index.x].clip.Frames[index.y].x;
+                    _oldType = aminaEditor.Components[index.x].clip.Frames[index.y].XKey;
+                    _oldFillPara = aminaEditor.Components[index.x].clip.Frames[index.y].XfillPara;
+                    break;
+                case FrameParaType.y:
+                    _oldValue = aminaEditor.Components[index.x].clip.Frames[index.y].y;
+                    _oldType = aminaEditor.Components[index.x].clip.Frames[index.y].YKey;
+                    _oldFillPara = aminaEditor.Components[index.x].clip.Frames[index.y].YfillPara;
+                    break;
+                case FrameParaType.a:
+                    _oldValue = aminaEditor.Components[index.x].clip.Frames[index.y].angle;
+                    _oldType = aminaEditor.Components[index.x].clip.Frames[index.y].AKey;
+                    _oldFillPara = aminaEditor.Components[index.x].clip.Frames[index.y].AfillPara;
+                    break;
+            }
+            helper = new AEUndoOperation_AddKey_Coveredkey(_value, _type, _fillPara, _oldValue, _oldType,_oldFillPara);
         }
     }
 
     public override void FirstOperation()
     {
-        helper.DoOperation(aminaEditor, index);
+        helper.DoOperation(aminaEditor, index,paraType);
     }
 
     public override void DoOperation()
     {
         //aminaEditor.Components[index.x].clip.AddKeyFrame(pos, ang, index.y);
         
-        helper.DoOperation(aminaEditor, index);
+        helper.DoOperation(aminaEditor, index, paraType);
     }
 
     public override void UndoOperation()
     {
-        helper.UndoOperation(aminaEditor, index);
+        helper.UndoOperation(aminaEditor, index, paraType);
         //aminaEditor.Components[index.x].clip.DeleteKeyFrame(index.y);
     }
 }
 
 public interface IAEUndoOperationHelper
 {
-    void DoOperation(AminaEditor ae, Vector2Int index);
-    void UndoOperation(AminaEditor ae, Vector2Int index);
+    void DoOperation(AminaEditor ae, Vector2Int index, FrameParaType _pType);
+    void UndoOperation(AminaEditor ae, Vector2Int index, FrameParaType _pType);
 }
 
 public class AEUndoOperation_Addkey_NewAdd:IAEUndoOperationHelper
 {
-    Vector2 pos;
-    float ang;
+    float keyValue;
     //Vector2Int index;
     KeyType type;
+    IFrameFillPara fillPara;
 
-    public AEUndoOperation_Addkey_NewAdd(Vector2 _pos,float _ang,KeyType _type)
+    public AEUndoOperation_Addkey_NewAdd(float _value,KeyType _type,IFrameFillPara _fillpara)
     {
-        pos = _pos;
-        ang = _ang;
+        keyValue = _value;
         type = _type;
+        fillPara = _fillpara;
     }
 
-    public void DoOperation(AminaEditor ae,Vector2Int index)
+    public void DoOperation(AminaEditor ae,Vector2Int index,FrameParaType _pType)
     {
         //Debug.Log("AEUndoOperation_Addkey_NewAdd");
-        ae.Components[index.x].clip.AddKeyFrame(pos, ang,new EditorAminaComponentClip.Key(index.y,type));
+        switch (_pType)
+        {
+            case FrameParaType.x:
+                ae.Components[index.x].clip.AddXKeyFrame(keyValue, index.y, type, fillPara);
+                break;
+            case FrameParaType.y:
+                ae.Components[index.x].clip.AddYKeyFrame(keyValue, index.y, type, fillPara);
+                break;
+            case FrameParaType.a:
+                ae.Components[index.x].clip.AddAKeyFrame(keyValue, index.y, type, fillPara);
+                break;
+        }
+        //ae.Components[index.x].clip.AddKeyFrame(pos, ang,new EditorAminaComponentClip.Key(index.y,type));
     }
 
-    public void UndoOperation(AminaEditor ae, Vector2Int index)
+    public void UndoOperation(AminaEditor ae, Vector2Int index, FrameParaType _pType)
     {
         //Debug.Log("AEUndoOperation_Addkey_NewAdd Undo");
-        ae.Components[index.x].clip.DeleteKeyFrame(index.y);
+        switch (_pType)
+        {
+            case FrameParaType.x:
+                ae.Components[index.x].clip.DeleteXKeyFrame(index.y);
+                break;
+            case FrameParaType.y:
+                ae.Components[index.x].clip.DeleteYKeyFrame(index.y);
+                break;
+            case FrameParaType.a:
+                ae.Components[index.x].clip.DeleteAKeyFrame(index.y);
+                break;
+        }
     }
 }
 
@@ -266,75 +411,146 @@ public class AEUndoOperation_AddKey_Coveredkey : IAEUndoOperationHelper
 {
     //Vector2Int index;
 
-    Vector2 pos;
-    float ang;
+    float keyValue;
     KeyType type;
+    IFrameFillPara fillPara;
 
-    Vector2 oldPos;
-    float oldAng;
+    float oldKeyValue;
     KeyType oldType;
+    IFrameFillPara oldFillPara;
 
-    public AEUndoOperation_AddKey_Coveredkey(Vector2 _pos,float _ang,KeyType _type,Vector2 _oldPos,float _oldAng,KeyType _oldType)
+    public AEUndoOperation_AddKey_Coveredkey(float _value,KeyType _type, IFrameFillPara _fillPara, float _oldValue,KeyType _oldType, IFrameFillPara _OldFillPara)
     {
-        oldPos = _oldPos;
-        oldAng = _oldAng;
-        oldType = _oldType;
-
-        pos = _pos;
-        ang = _ang;
+        keyValue = _value;
         type = _type;
+        fillPara = _fillPara;
+
+        oldKeyValue = _oldValue;
+        oldType = _oldType;
+        oldFillPara = _OldFillPara;
     }
 
-    public void DoOperation(AminaEditor ae, Vector2Int _index)
+    public void DoOperation(AminaEditor ae, Vector2Int index,FrameParaType _pType)
     {
-        ae.Components[_index.x].clip.AddKeyFrame(pos, ang,new EditorAminaComponentClip.Key(_index.y,type));
+        switch (_pType)
+        {
+            case FrameParaType.x:
+                ae.Components[index.x].clip.AddXKeyFrame(keyValue, index.y, type,fillPara);
+                break;
+            case FrameParaType.y:
+                ae.Components[index.x].clip.AddYKeyFrame(keyValue, index.y, type, fillPara);
+                break;
+            case FrameParaType.a:
+                ae.Components[index.x].clip.AddAKeyFrame(keyValue, index.y, type, fillPara);
+                break;
+        }
     }
 
-    public void UndoOperation(AminaEditor ae, Vector2Int _index)
+    public void UndoOperation(AminaEditor ae, Vector2Int index, FrameParaType _pType)
     {
-        ae.Components[_index.x].clip.AddKeyFrame(oldPos, oldAng,new EditorAminaComponentClip.Key(_index.y,oldType));
+        switch (_pType)
+        {
+            case FrameParaType.x:
+                ae.Components[index.x].clip.AddXKeyFrame(oldKeyValue, index.y, oldType,oldFillPara);
+                break;
+            case FrameParaType.y:
+                ae.Components[index.x].clip.AddYKeyFrame(oldKeyValue, index.y, oldType, oldFillPara);
+                break;
+            case FrameParaType.a:
+                ae.Components[index.x].clip.AddAKeyFrame(oldKeyValue, index.y, oldType, oldFillPara);
+                break;
+        }
     }
 }
 
 public class AEUndoOperation_Deletekey : AminaEditorUndoOperation
 {
-    Vector2 pos;
-    float ang;
+    float para;
     Vector2Int index;
     KeyType type;
+    FrameParaType paraType;
+    IFrameFillPara fillPara;
 
-    public AEUndoOperation_Deletekey(AminaEditor ae, Vector2Int _index) : base(ae)
+    public AEUndoOperation_Deletekey(AminaEditor ae, Vector2Int _index, FrameParaType _pType) : base(ae)
     {
         index = _index;
-        AminaFrame _t = aminaEditor.Components[index.x].clip.frames[index.y];
-        type = aminaEditor.Components[index.x].clip.GetIndexType(index.y);
-
-        pos = _t.pos;
-        ang = _t.angle;
+        paraType = _pType;
+        switch (paraType)
+        {
+            case FrameParaType.x:
+                para = aminaEditor.Components[index.x].clip.Frames[index.y].x;
+                type = aminaEditor.Components[index.x].clip.Frames[index.y].XKey;
+                fillPara = aminaEditor.Components[index.x].clip.Frames[index.y].XfillPara;
+                break;
+            case FrameParaType.y:
+                para = aminaEditor.Components[index.x].clip.Frames[index.y].y;
+                type = aminaEditor.Components[index.x].clip.Frames[index.y].YKey;
+                fillPara = aminaEditor.Components[index.x].clip.Frames[index.y].YfillPara;
+                break;
+            case FrameParaType.a:
+                para = aminaEditor.Components[index.x].clip.Frames[index.y].angle;
+                type = aminaEditor.Components[index.x].clip.Frames[index.y].AKey;
+                fillPara = aminaEditor.Components[index.x].clip.Frames[index.y].AfillPara;
+                break;
+        }
     }
 
     public override void FirstOperation()
     {
-        aminaEditor.Components[index.x].clip.DeleteKeyFrame(index.y);
+        switch (paraType)
+        {
+            case FrameParaType.x:
+                aminaEditor.Components[index.x].clip.DeleteXKeyFrame(index.y);
+                break;
+            case FrameParaType.y:
+                aminaEditor.Components[index.x].clip.DeleteYKeyFrame(index.y);
+                break;
+            case FrameParaType.a:
+                aminaEditor.Components[index.x].clip.DeleteAKeyFrame(index.y);
+                break;
+        }
     }
 
     public override void DoOperation()
     {
-        aminaEditor.Components[index.x].clip.DeleteKeyFrame(index.y);
+        switch (paraType)
+        {
+            case FrameParaType.x:
+                aminaEditor.Components[index.x].clip.DeleteXKeyFrame(index.y);
+                break;
+            case FrameParaType.y:
+                aminaEditor.Components[index.x].clip.DeleteYKeyFrame(index.y);
+                break;
+            case FrameParaType.a:
+                aminaEditor.Components[index.x].clip.DeleteAKeyFrame(index.y);
+                break;
+        }
     }
 
     public override void UndoOperation()
     {
-        aminaEditor.Components[index.x].clip.AddKeyFrame(pos, ang,new EditorAminaComponentClip.Key(index.y,type));
+        switch (paraType)
+        {
+            case FrameParaType.x:
+                aminaEditor.Components[index.x].clip.AddXKeyFrame(para, index.y, type,fillPara);
+                break;
+            case FrameParaType.y:
+                aminaEditor.Components[index.x].clip.AddYKeyFrame(para, index.y, type, fillPara);
+                break;
+            case FrameParaType.a:
+                aminaEditor.Components[index.x].clip.AddAKeyFrame(para, index.y, type, fillPara);
+                break;
+        }
     }
 }
-
+#region
+/*
 public class AEUndoOperation_MoveKeys: AminaEditorUndoOperation
 {
     int deltaIndex;
-    List<List<Vector2Int>> selectFrames;
+    List<List<MoveKeyData>> selectFrames;
     
-    public AEUndoOperation_MoveKeys(AminaEditor ae, List<List<Vector2Int>> _frames,int _delta):base(ae)
+    public AEUndoOperation_MoveKeys(AminaEditor ae, List<List<MoveKeyData>> _frames,int _delta):base(ae)
     {
         selectFrames = _frames;
         deltaIndex = _delta;
@@ -348,9 +564,13 @@ public class AEUndoOperation_MoveKeys: AminaEditorUndoOperation
             {
                 for (int j = 0; j < selectFrames[i].Count; j++)
                 {
-                    Vector2Int k = selectFrames[i][j];
-                    aminaEditor.Components[k.y].clip.MoveKey(k.x, deltaIndex);
-                    aminaEditor.Components[i].SelectionKeyFrame[j] = aminaEditor.Components[i].SelectionKeyFrame[j] + deltaIndex;
+                    MoveKeyData k = selectFrames[i][j];
+
+                    foreach (FrameParaType _p in k.Selected)
+                    {
+                        aminaEditor.Components[k.ComponentIndex].clip.MoveXYAKey(k.FrameIndex, deltaIndex, _p);
+                    }
+                    aminaEditor.Components[i].SelectionKeyFrame[j].Index = aminaEditor.Components[i].SelectionKeyFrame[j].Index + deltaIndex;
                 }
             }
         }
@@ -360,9 +580,15 @@ public class AEUndoOperation_MoveKeys: AminaEditorUndoOperation
             {
                 for (int j = selectFrames[i].Count - 1; j >= 0; j--)
                 {
-                    Vector2Int k = selectFrames[i][j];
-                    aminaEditor.Components[k.y].clip.MoveKey(k.x, deltaIndex);
-                    aminaEditor.Components[i].SelectionKeyFrame[j] = aminaEditor.Components[i].SelectionKeyFrame[j] + deltaIndex;
+                    //Vector2Int k = selectFrames[i][j];
+                    //aminaEditor.Components[k.y].clip.MoveKey(k.x, deltaIndex);
+                    MoveKeyData k = selectFrames[i][j];
+
+                    foreach (FrameParaType _p in k.Selected)
+                    {
+                        aminaEditor.Components[k.ComponentIndex].clip.MoveXYAKey(k.FrameIndex, deltaIndex, _p);
+                    }
+                    aminaEditor.Components[i].SelectionKeyFrame[j].Index = aminaEditor.Components[i].SelectionKeyFrame[j].Index + deltaIndex;
                 }
             }
         }
@@ -376,8 +602,12 @@ public class AEUndoOperation_MoveKeys: AminaEditorUndoOperation
             {
                 for (int j = 0; j < selectFrames[i].Count; j++)
                 {
-                    Vector2Int k = selectFrames[i][j];
-                    aminaEditor.Components[k.y].clip.MoveKey(k.x, deltaIndex);
+                    MoveKeyData k = selectFrames[i][j];
+
+                    foreach (FrameParaType _p in k.Selected)
+                    {
+                        aminaEditor.Components[k.ComponentIndex].clip.MoveXYAKey(k.FrameIndex, deltaIndex, _p);
+                    }
                     //aminaEditor.Components[i].SelectionKeyFrame[j] = aminaEditor.Components[i].SelectionKeyFrame[j] + deltaIndex;
                 }
             }
@@ -388,8 +618,12 @@ public class AEUndoOperation_MoveKeys: AminaEditorUndoOperation
             {
                 for (int j = selectFrames[i].Count-1; j >=0; j--)
                 {
-                    Vector2Int k = selectFrames[i][j];
-                    aminaEditor.Components[k.y].clip.MoveKey(k.x, deltaIndex);
+                    MoveKeyData k = selectFrames[i][j];
+
+                    foreach (FrameParaType _p in k.Selected)
+                    {
+                        aminaEditor.Components[k.ComponentIndex].clip.MoveXYAKey(k.FrameIndex, deltaIndex, _p);
+                    }
                     //aminaEditor.Components[i].SelectionKeyFrame[j] = aminaEditor.Components[i].SelectionKeyFrame[j] + deltaIndex;
                 }
             }
@@ -404,8 +638,14 @@ public class AEUndoOperation_MoveKeys: AminaEditorUndoOperation
             {
                 for (int j = 0; j < selectFrames[i].Count; j++)
                 {
-                    Vector2Int k = selectFrames[i][j];
-                    aminaEditor.Components[k.y].clip.MoveKey(k.x+deltaIndex, -deltaIndex);
+                    MoveKeyData k = selectFrames[i][j];
+
+                    foreach (FrameParaType _p in k.Selected)
+                    {
+                        aminaEditor.Components[k.ComponentIndex].clip.MoveXYAKey(k.FrameIndex + deltaIndex, -deltaIndex, _p);
+                    }
+
+                    //aminaEditor.Components[k.y].clip.MoveKey(k.x+deltaIndex, -deltaIndex);
                     //aminaEditor.Components[i].SelectionKeyFrame[j] = aminaEditor.Components[i].SelectionKeyFrame[j] - deltaIndex;
                 }
             }
@@ -416,12 +656,167 @@ public class AEUndoOperation_MoveKeys: AminaEditorUndoOperation
             {
                 for (int j = selectFrames[i].Count - 1; j >= 0; j--)
                 {
-                    Vector2Int k = selectFrames[i][j];
-                    aminaEditor.Components[k.y].clip.MoveKey(k.x+deltaIndex, -deltaIndex);
+                    //Vector2Int k = selectFrames[i][j];
+                    //aminaEditor.Components[k.y].clip.MoveKey(k.x+deltaIndex, -deltaIndex);
+                    MoveKeyData k = selectFrames[i][j];
+
+                    foreach (FrameParaType _p in k.Selected)
+                    {
+                        aminaEditor.Components[k.ComponentIndex].clip.MoveXYAKey(k.FrameIndex + deltaIndex, -deltaIndex, _p);
+                    }
                     //aminaEditor.Components[i].SelectionKeyFrame[j] = aminaEditor.Components[i].SelectionKeyFrame[j] - deltaIndex;
                 }
             }
         }
+    }
+}
+*/
+#endregion
+public class AEUndoOperation_MoveKey : AminaEditorUndoOperation
+{
+    int deltaIndex;
+    List<List<MoveKeyData>> selectFrames;
+    List<AEUndoOperation_Addkey> addkeyOps;
+    List<AEUndoOperation_Deletekey> dleKeyOps;
+    public AEUndoOperation_MoveKey(AminaEditor ae, List<List<MoveKeyData>> _frames, int _delta) : base(ae)
+    {
+        aminaEditor = ae;
+        selectFrames = _frames;
+        deltaIndex = _delta;
+        dleKeyOps = new List<AEUndoOperation_Deletekey>();
+    }
+
+    public override void FirstOperation()
+    {
+        if (deltaIndex < 0)
+        {
+            for (int i = 0; i < aminaEditor.Components.Count; i++)
+            {
+                for (int j = 0; j < selectFrames[i].Count; j++)
+                {
+                    MoveKeyData k = selectFrames[i][j];
+
+                    Vector2Int _newVec2 = new Vector2Int(k.ComponentIndex, k.FrameIndex + deltaIndex);
+
+
+                    foreach (FrameParaType _p in k.Selected)
+                    {
+                       if(aminaEditor.Components[k.ComponentIndex].clip.IsTheIndexHaveKey(_newVec2.y, _p))
+                       {
+                            //Debug.Log("delete");
+                            dleKeyOps.Add(new AEUndoOperation_Deletekey(aminaEditor, _newVec2, _p));
+                       }
+                        aminaEditor.Components[k.ComponentIndex].clip.MoveXYAKey(k.FrameIndex, deltaIndex, _p);
+                    }
+                    aminaEditor.Components[i].SelectionKeyFrame[j].Index = aminaEditor.Components[i].SelectionKeyFrame[j].Index + deltaIndex;
+                }
+            }
+        }
+        else
+        {
+            for (int i = 0; i < aminaEditor.Components.Count; i++)
+            {
+                for (int j = selectFrames[i].Count - 1; j >= 0; j--)
+                {
+                    //Vector2Int k = selectFrames[i][j];
+                    //aminaEditor.Components[k.y].clip.MoveKey(k.x, deltaIndex);
+                    MoveKeyData k = selectFrames[i][j];
+                    Vector2Int _newVec2 = new Vector2Int(k.ComponentIndex, k.FrameIndex + deltaIndex);
+                    foreach (FrameParaType _p in k.Selected)
+                    {
+                        if (aminaEditor.Components[k.ComponentIndex].clip.IsTheIndexHaveKey(_newVec2.y, _p))
+                        {
+                            //Debug.Log("delete");
+                            dleKeyOps.Add(new AEUndoOperation_Deletekey(aminaEditor, _newVec2, _p));
+                        }
+                        aminaEditor.Components[k.ComponentIndex].clip.MoveXYAKey(k.FrameIndex, deltaIndex, _p);
+                    }
+                    aminaEditor.Components[i].SelectionKeyFrame[j].Index = aminaEditor.Components[i].SelectionKeyFrame[j].Index + deltaIndex;
+                }
+            }
+        }
+    }
+
+    public override void DoOperation()
+    {
+        if (deltaIndex < 0)
+        {
+            for (int i = 0; i < aminaEditor.Components.Count; i++)
+            {
+                for (int j = 0; j < selectFrames[i].Count; j++)
+                {
+                    MoveKeyData k = selectFrames[i][j];
+
+                    foreach (FrameParaType _p in k.Selected)
+                    {
+                        aminaEditor.Components[k.ComponentIndex].clip.MoveXYAKey(k.FrameIndex, deltaIndex, _p);
+                    }
+                    //aminaEditor.Components[i].SelectionKeyFrame[j] = aminaEditor.Components[i].SelectionKeyFrame[j] + deltaIndex;
+                }
+            }
+        }
+        else
+        {
+            for (int i = 0; i < aminaEditor.Components.Count; i++)
+            {
+                for (int j = selectFrames[i].Count - 1; j >= 0; j--)
+                {
+                    MoveKeyData k = selectFrames[i][j];
+
+                    foreach (FrameParaType _p in k.Selected)
+                    {
+                        aminaEditor.Components[k.ComponentIndex].clip.MoveXYAKey(k.FrameIndex, deltaIndex, _p);
+                    }
+                    //aminaEditor.Components[i].SelectionKeyFrame[j] = aminaEditor.Components[i].SelectionKeyFrame[j] + deltaIndex;
+                }
+            }
+        }
+    }
+
+    public override void UndoOperation()
+    {
+        if (deltaIndex > 0)
+        {
+            for (int i = 0; i < aminaEditor.Components.Count; i++)
+            {
+                for (int j = 0; j < selectFrames[i].Count; j++)
+                {
+                    MoveKeyData k = selectFrames[i][j];
+
+                    foreach (FrameParaType _p in k.Selected)
+                    {
+                        aminaEditor.Components[k.ComponentIndex].clip.MoveXYAKey(k.FrameIndex + deltaIndex, -deltaIndex, _p);
+                    }
+
+                    //aminaEditor.Components[k.y].clip.MoveKey(k.x+deltaIndex, -deltaIndex);
+                    //aminaEditor.Components[i].SelectionKeyFrame[j] = aminaEditor.Components[i].SelectionKeyFrame[j] - deltaIndex;
+                }
+            }
+        }
+        else
+        {
+            for (int i = 0; i < aminaEditor.Components.Count; i++)
+            {
+                for (int j = selectFrames[i].Count - 1; j >= 0; j--)
+                {
+                    //Vector2Int k = selectFrames[i][j];
+                    //aminaEditor.Components[k.y].clip.MoveKey(k.x+deltaIndex, -deltaIndex);
+                    MoveKeyData k = selectFrames[i][j];
+
+                    foreach (FrameParaType _p in k.Selected)
+                    {
+                        aminaEditor.Components[k.ComponentIndex].clip.MoveXYAKey(k.FrameIndex + deltaIndex, -deltaIndex, _p);
+                    }
+                    //aminaEditor.Components[i].SelectionKeyFrame[j] = aminaEditor.Components[i].SelectionKeyFrame[j] - deltaIndex;
+                }
+            }
+        }
+
+        for(int i=0;i< dleKeyOps.Count; i++)
+        {
+            dleKeyOps[i].UndoOperation();
+        }
+
     }
 }
 
@@ -458,4 +853,18 @@ public class AEUndoOperation_Complex : AminaEditorUndoOperation
         }
     }
 
+}
+
+public class MoveKeyData
+{
+    public int ComponentIndex;
+    public int FrameIndex;
+    public List<FrameParaType> Selected;
+
+    public MoveKeyData(int _ComponentIndex, int _FrameIndex)
+    {
+        ComponentIndex = _ComponentIndex;
+        FrameIndex = _FrameIndex;
+        Selected = new List<FrameParaType>();
+    }
 }

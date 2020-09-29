@@ -95,61 +95,32 @@ public class ExampleClass : EditorWindow
     }
 }
 
-public class EditorGUIGradientField : EditorWindow
-{
 
-    [MenuItem("Examples/Gradient Field demo")]
+// Create a foldable menu that hides/shows the selected transform position.
+// if no Transform is selected, the Foldout item will be folded until a transform is selected.
+public class EditorGUIFoldout : EditorWindow
+{
+    public bool showPosition = true;
+    public string status = "Select a GameObject";
+    [MenuItem("Examples/Foldout Usage")]
     static void Init()
     {
-        EditorWindow window = GetWindow(typeof(EditorGUIGradientField));
-        window.position = new Rect(0, 0, 400, 199);
+        UnityEditor.EditorWindow window = GetWindow(typeof(EditorGUIFoldout));
+        window.position = new Rect(0, 0, 750, 740);
         window.Show();
     }
-    bool isplay;
-    AminaEditorConfigSO scriptableObject;
-    private void OnEnable()
-    {
-        isplay = false;
-        scriptableObject = EditorGUIUtility.Load("AminaEditorConfig.asset") as AminaEditorConfigSO;
 
-    }
+    Vector2 scroll;
 
     void OnGUI()
     {
+        EditorGUI.DrawRect(new Rect(120, 120, 300, 300), Color.blue);
 
-        if(GUI.RepeatButton(new Rect(10, 10, 50, 50), "ca"))
-            Debug.Log("Clicked the button with an image");
+        scroll = GUI.BeginScrollView(new Rect(100, 100, 100, 100), scroll, new Rect(100, 100, 150, 150));
 
-        if (GUI.Button(new Rect(10, 70, 50, 30), "Click"))Debug.Log("Clicked the button with text");
 
-        Rect r = new Rect(10, 120, 50, 30);
 
-        if(Event.current.type == EventType.MouseDown)
-        {
-            
-
-            if (r.Contains(Event.current.mousePosition))
-            {
-                isplay = !isplay;
-                Repaint();
-            }
-        }
-
-        
-
-        if (isplay)
-        {
-            GUI.Box(r, "playing");
-        }
-        else
-        {
-            GUIStyle k = new GUIStyle();
-            k.alignment = TextAnchor.MiddleCenter;
-            //k.normal.background=scriptableObject.Test;
-            //k.hover.background=scriptableObject.Test2; 
-
-            GUI.Box(r, "play",k);
-        }
-        
+        GUI.EndScrollView();
     }
+    
 }
