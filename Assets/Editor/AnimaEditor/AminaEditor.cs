@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
@@ -58,7 +58,9 @@ public class AminaEditor : EditorWindow
 
     //bool isDraggingMiddleControl = false;
     //bool isDraggingaminaTopBlock = false;//拖拽播放红轴
-
+    int outPutOffset;
+    Vector2Int outPutSelect;
+    FrameOutputDataEditorContainer outputDataEditorContainer;
 
     //bool isDraggingKeyFrames = false;//拖拽关键帧
     int draggingKeyFramesBase;
@@ -87,15 +89,21 @@ public class AminaEditor : EditorWindow
 
     GUIContent playTex;
     GUIContent PlayingTex;
+    GUIContent buttonTex;
+    GUIContent buttonATex;
+
     int maxFrameNum;
     float realMaxFrameNum;
 
-
+    int[] tempPauseTime;
+    int pauseComponetIndex;
+    bool isDrawingPause;
 
     float frameTime = 1f / 30f;
     float deltaTime;
     float playTime;
     double lastStartUpTime;
+    
 
     public enum OriginAminType
     {
@@ -103,16 +111,6 @@ public class AminaEditor : EditorWindow
         Human = 1,
     }
     OriginAminType originDisplay;
-
-    void OnInspectorUpdate()
-    {
-        
-    }
-
-    void OnHierarchyChange()
-    {
-        //Debug.Log("OnHierarchyChange");
-    }
 
     private void Update()
     {
@@ -151,7 +149,9 @@ public class AminaEditor : EditorWindow
         frameTime = 1f / 30f;
         playTex = new GUIContent(scriptableObject.PlayTex);
         PlayingTex = new GUIContent(scriptableObject.PlayingTex);
-        
+        buttonTex = new GUIContent(scriptableObject.Button);
+        buttonATex = new GUIContent(scriptableObject.ButtonActive);
+
         isPlaying = false;
         NilStyle = new GUIStyle();
         NilStyle.alignment = TextAnchor.MiddleCenter;
@@ -165,8 +165,13 @@ public class AminaEditor : EditorWindow
         LabelStyle.alignment = TextAnchor.MiddleLeft;
 
         isDragging = false;
-        
+        isDrawingPause = false;
+        pauseComponetIndex = -1;
 
+        outPutSelect = new Vector2Int(-1, -1);
+        outPutOffset = 0;
+
+        outputDataEditorContainer = ScriptableObject.CreateInstance<FrameOutputDataEditorContainer>();
     }
     
 
@@ -425,7 +430,46 @@ public class AminaEditor : EditorWindow
                     }
                     Repaint();
                     break;
-                    //4是拖拽中间
+                //4是拖拽中间
+                case 5://拖拽pause
+                    float _aminaMouseXIndex5 = Rect.PointToNormalized(_aminaTopBlock, eventCurrent.mousePosition).x * _aminaTopBlock.width / frameBlockWidth;
+                    int newAminaPointerIndex5 = Convert.ToInt16(_aminaMouseXIndex5);
+                    //Debug.Log("currentAminaPointerIndex:" + currentAminaPointerIndex);
+                    if (newAminaPointerIndex5 < 1)
+                    {
+                        newAminaPointerIndex5 = 1;
+                    }
+
+                    tempPauseTime[1] = newAminaPointerIndex5 - 1;
+
+                    if (eventCurrent.rawType == EventType.MouseDown)
+                    {
+                        //isDraggingSelectingRect = false;
+                        AddPause(newAminaPointerIndex5);
+                        DraggingOff();
+
+                    }
+                    Repaint();
+                    break;
+                case 6://拖拽outPut
+                    float _aminaMouseXIndex6 = Rect.PointToNormalized(_aminaTopBlock, eventCurrent.mousePosition).x * _aminaTopBlock.width / frameBlockWidth;
+                    int newAminaPointerIndex6 = Convert.ToInt16(_aminaMouseXIndex6)-1;
+                    if (newAminaPointerIndex6 < 0)
+                    {
+                        newAminaPointerIndex6 = 0;
+                    }
+                    outPutOffset = newAminaPointerIndex6 - outPutSelect.y;
+
+                    if (eventCurrent.rawType == EventType.MouseUp)
+                    {
+                        MoveOutput(outPutSelect.x, outPutSelect.y, newAminaPointerIndex6);
+                        outPutOffset = 0;
+                        outPutSelect = new Vector2Int(-1, -1);
+                        DraggingOff();
+                    }
+                    Repaint();
+
+                    break;
             }
         }else
         {
@@ -454,6 +498,7 @@ public class AminaEditor : EditorWindow
                         menu.AddItem(new GUIContent("Add key Decelerate"), false, AddkeyDecelerate, _addkeyPara);
                         menu.AddItem(new GUIContent("Add key Sine"), false, CallSinKeyWindow, _addkeyPara);
                         menu.AddItem(new GUIContent("Add key Cosine"), false, CallCosKeyWindow, _addkeyPara);
+                        menu.AddItem(new GUIContent("Add Pause"), false, AddPauseOrder, _addkeyPara);
                         if (Components[_addkeyPara.x].clip.IsTheIndexHaveKey(_frameIndex, _addkeyPara.z))
                         {
                             menu.AddItem(new GUIContent("Delete key"), false, DeleteKey, _addkeyPara);
@@ -463,8 +508,37 @@ public class AminaEditor : EditorWindow
                         {
                             menu.AddDisabledItem(new GUIContent("Delete key"), false);
                             //menu.AddDisabledItem(new GUIContent("Copy"), false);
-
                         }
+                        if (Components[_addkeyPara.x].clip.PauseTime != null)
+                        {
+                            menu.AddItem(new GUIContent("Delete Pause"), false, DelPause, _addkeyPara.x);
+                        }
+                        else
+                        {
+                            menu.AddDisabledItem(new GUIContent("Delete Pause"), false);
+                        }
+                        bool _isCanAddOut=true;
+                        if (Components[_addkeyPara.x].clip.OutData.Count > 0)
+                        {
+                            for(int i=0;i< Components[_addkeyPara.x].clip.OutData.Count; i++)
+                            {
+                                if(Components[_addkeyPara.x].clip.OutData[i].Index== _addkeyPara.y)
+                                {
+                                    _isCanAddOut = false;
+                                    break;
+                                }
+                            }
+                        }
+                        if (_isCanAddOut)
+                        {
+                            menu.AddItem(new GUIContent("Add Output"), false, AddOut, _addkeyPara);
+                        }
+                        else
+                        {
+                            menu.AddItem(new GUIContent("Delete Output"), false, DelOut, _addkeyPara);
+                        }
+
+
                         /*if (copies == null || copies.Count == 0)
                         {
                             menu.AddDisabledItem(new GUIContent("Paste"), false);
@@ -496,62 +570,93 @@ public class AminaEditor : EditorWindow
 
                         if (_frameIndex < 0) { _frameIndex = 0; }
 
-                        if (Components[_para.x].clip.IsTheIndexHaveKey(_frameIndex, _para.z))
+                        bool _next = true;
+                        if (Components[_para.x].clip.OutData.Count > 0)
                         {
-                            float _dY = topBlockHeight + conponentClipBoxHeight * (conponentIndex + 0.5f);
-                            float _dX = RightRootBlock.x + frameBlockWidth * (_frameIndex + 1);
-                            Rect _keyRect = new Rect(_dX - keySqureRadius, _dY - keySqureRadius, 2 * keySqureRadius, 2 * keySqureRadius);
-                            if (_keyRect.Contains(eventCurrent.mousePosition))
+                            for(int m=0;m< Components[_para.x].clip.OutData.Count; m++)
                             {
-                                /*if (!Components[_para.x].SelectionKeyFrameContains(_frameIndex))
+                                if(Components[_para.x].clip.OutData[m].Index== _frameIndex)
                                 {
-                                    ClearSelectKey();
-                                    draggingKeyFramesOffset = 0;
-                                    Components[_para.x].SelectionKeyFrameAdd(_frameIndex);
-                                    Repaint();
-                                    eventCurrent.Use();
-                                }*/
-                                if (eventCurrent.type == EventType.MouseDown&& !Components[_para.x].SelectionKeyContained(_frameIndex, _para.z)){
-                                    ClearSelectKey();
-                                    draggingKeyFramesOffset = 0;
-                                    Components[_para.x].SelectionKeyFrameAdd(_frameIndex, _para.z);
-                                    Repaint();
-                                    eventCurrent.Use();
-                                }
-                                
+                                    float _dY = topBlockHeight + conponentClipBoxHeight * conponentIndex+2;
+                                    float _dX = RightRootBlock.x + frameBlockWidth * (_frameIndex + 1)-6;
 
-                                if (eventCurrent.type == EventType.MouseDrag)
+                                    Rect _outRect = new Rect(_dX, _dY,12 , 6);
+
+                                    if (_outRect.Contains(eventCurrent.mousePosition))
+                                    {
+                                        outPutSelect = new Vector2Int(_para.x, _para.y);
+                                        DraggingOn(6);
+                                    }
+                                    outputDataEditorContainer.outputData = Components[_para.x].clip.OutData[m];
+                                    Selection.activeObject=outputDataEditorContainer;
+
+                                    _next = false;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (_next)
+                        {
+                            if (Components[_para.x].clip.IsTheIndexHaveKey(_frameIndex, _para.z))
+                            {
+                                float _dY = topBlockHeight + conponentClipBoxHeight * (conponentIndex + 0.5f);
+                                float _dX = RightRootBlock.x + frameBlockWidth * (_frameIndex + 1);
+                                Rect _keyRect = new Rect(_dX - keySqureRadius, _dY - keySqureRadius, 2 * keySqureRadius, 2 * keySqureRadius);
+                                if (_keyRect.Contains(eventCurrent.mousePosition))
                                 {
-                                    //isDraggingKeyFrames = true;
-                                    DraggingOn(1);
-                                    draggingKeyFramesBase = _frameIndex;
+                                    /*if (!Components[_para.x].SelectionKeyFrameContains(_frameIndex))
+                                    {
+                                        ClearSelectKey();
+                                        draggingKeyFramesOffset = 0;
+                                        Components[_para.x].SelectionKeyFrameAdd(_frameIndex);
+                                        Repaint();
+                                        eventCurrent.Use();
+                                    }*/
+                                    if (eventCurrent.type == EventType.MouseDown && !Components[_para.x].SelectionKeyContained(_frameIndex, _para.z))
+                                    {
+                                        ClearSelectKey();
+                                        draggingKeyFramesOffset = 0;
+                                        Components[_para.x].SelectionKeyFrameAdd(_frameIndex, _para.z);
+                                        Repaint();
+                                        eventCurrent.Use();
+                                    }
+
+
+                                    if (eventCurrent.type == EventType.MouseDrag)
+                                    {
+                                        //isDraggingKeyFrames = true;
+                                        DraggingOn(1);
+                                        draggingKeyFramesBase = _frameIndex;
+                                    }
+                                }
+                                else
+                                {
+                                    ClearSelectKey();
+
+                                    if (eventCurrent.type == EventType.MouseDrag)
+                                    {
+                                        //isDraggingSelectingRect = true;
+                                        DraggingOn(3);
+                                        SelectRectStart = new Vector2Int(_frameIndex + 1, Convert.ToInt16(frameEditPos.y * (Components.Count + componentParaCount)));
+                                    }
+
+
                                 }
                             }
                             else
                             {
-                                ClearSelectKey();
-
                                 if (eventCurrent.type == EventType.MouseDrag)
                                 {
                                     //isDraggingSelectingRect = true;
                                     DraggingOn(3);
-                                    SelectRectStart = new Vector2Int(_frameIndex+1,Convert.ToInt16(frameEditPos.y * (Components.Count+componentParaCount)));
+                                    SelectRectStart = new Vector2Int(_frameIndex + 1, Convert.ToInt16(frameEditPos.y * (Components.Count + componentParaCount)));
+                                    //SelectRectEnd = new Vector2Int(conponentIndex, _frameIndex);
                                 }
-                                
-
+                                ClearSelectKey();
                             }
                         }
-                        else
-                        {
-                            if (eventCurrent.type == EventType.MouseDrag)
-                            {
-                                //isDraggingSelectingRect = true;
-                                DraggingOn(3);
-                                SelectRectStart = new Vector2Int(_frameIndex + 1, Convert.ToInt16(frameEditPos.y * (Components.Count + componentParaCount)));
-                                //SelectRectEnd = new Vector2Int(conponentIndex, _frameIndex);
-                            }
-                            ClearSelectKey();
-                        }
+                        
                     }
                 }
             }
@@ -807,6 +912,53 @@ public class AminaEditor : EditorWindow
         GetRightBlockFrameMaxNumber();
     }
 
+    public void AddPauseOrder(object k)
+    {
+        Vector3Int v3 = (Vector3Int)k;
+        pauseComponetIndex = v3.x;
+        tempPauseTime = new int[2] { v3.y, v3.y };
+        isDrawingPause = true;
+        DraggingOn(5);
+    }
+
+    public void AddPause(int _end)
+    {
+        //int[] _pause = new int[2] { tempPauseTime, _end-1 };
+        if(tempPauseTime[0]<Components[pauseComponetIndex].clip.FramesCount&& tempPauseTime[1] < Components[pauseComponetIndex].clip.FramesCount)
+        {
+            editorUndo.AddPauseTime(pauseComponetIndex, tempPauseTime);
+        }
+        isDrawingPause = false;
+        pauseComponetIndex = -1;
+    }
+
+    public void DelPause(object k)
+    {
+        int _compIndex = (int)k;
+        //int[] _pause = new int[2] { tempPauseTime, _end-1 };
+        editorUndo.AddPauseTime(_compIndex, null);
+    }
+
+    public void AddOut(object k)
+    {
+        Vector3Int v3 = (Vector3Int)k;
+        Components[v3.x].clip.AddOutput(v3.y);
+        Repaint();
+    }
+
+    public void DelOut(object k)
+    {
+        Vector3Int v3 = (Vector3Int)k;
+        Components[v3.x].clip.DeleteOutput(v3.y);
+        Repaint();
+    }
+
+    public void MoveOutput(int _comp,int _oldIndex,int _newIndex)
+    {
+        Components[_comp].clip.MoveOutput(_oldIndex, _newIndex);
+
+    }
+
     public void CopyKey()
     {
         if (Components.Count > 0)
@@ -1037,7 +1189,7 @@ public class AminaEditor : EditorWindow
                 //GUI.Box(new Rect(0, topBlockHeight, LeftRootBlockWidth, conponentClipBoxHeight), new GUIContent("11111111obj", scriptableObject.HeadSprite));
                 
                 //GUI.Label(new Rect(20, topBlockHeight + conponentClipBoxHeight * i, labelWidth, conponentClipBoxHeight), Components[i].labelStr);
-                
+
 
             }
         }
@@ -1056,6 +1208,51 @@ public class AminaEditor : EditorWindow
                 float _dY = topBlockHeight + conponentClipBoxHeight * (_verticalIndex + 0.5f);
 
                 bool _isShow = Components[i].showComponentPara;
+
+                if (isDrawingPause&&i== pauseComponetIndex)
+                {
+                    int _l,_r;
+                    if(tempPauseTime[0]<= tempPauseTime[1])
+                    {
+                        _l = tempPauseTime[0]; _r = tempPauseTime[1];
+                    }
+                    else
+                    {
+                        _l = tempPauseTime[1]; _r = tempPauseTime[0];
+                    }
+
+                    EditorGUI.DrawRect(new Rect(RightRootBlock.x + frameBlockWidth * (_l + 1) - 8, topBlockHeight + conponentClipBoxHeight * i + 8, frameBlockWidth * (_r - _l) + 16, conponentClipBoxHeight - 16), Color.yellow);
+                }
+                else
+                {
+                    if (Components[i].clip.PauseTime != null&& Components[i].clip.PauseTime.Length==2)
+                    {
+                        EditorGUI.DrawRect(new Rect(RightRootBlock.x + frameBlockWidth * (Components[i].clip.PauseTime[0] + 1) - 8, topBlockHeight + conponentClipBoxHeight * i + 8, frameBlockWidth * (Components[i].clip.PauseTime[1] - Components[i].clip.PauseTime[0]) + 16, conponentClipBoxHeight - 16), Color.yellow);
+                    }
+                }
+
+                if (Components[i].clip.OutData.Count > 0)
+                {
+                    for(int j=0;j< Components[i].clip.OutData.Count; j++)
+                    {
+                        
+
+                        FrameOutputData _f = Components[i].clip.OutData[j];
+
+                        if (i==outPutSelect.x && _f.Index == outPutSelect.y)
+                        {
+                            GUI.Box(new Rect(RightRootBlock.x + frameBlockWidth * (_f.Index + 1+outPutOffset) - 6, topBlockHeight + conponentClipBoxHeight * i + 2, 12, 6), buttonATex, NilStyle);
+                        }
+                        else
+                        {
+                            GUI.Box(new Rect(RightRootBlock.x + frameBlockWidth * (_f.Index + 1) - 6, topBlockHeight + conponentClipBoxHeight * i + 2, 12, 6), buttonTex, NilStyle);
+                        }
+
+                        
+                    }
+                    
+                }
+
 
                 for (int j = 0; j < Components[i].clip.GeneralKeysIndex.Count; j++)
                 {
@@ -1434,6 +1631,8 @@ public class AminaEditor : EditorWindow
                 return;
             }
         }
+        outputDataEditorContainer.outputData = null;
+        Selection.activeObject = null;
         Debug.LogWarning("LoadClip failed,don't have this compID=" + _compID);
     }
 
@@ -1633,4 +1832,9 @@ public class CopyKeyData
     public KeyType type;
     public float para;
     public IFrameFillPara fillPara;
+}
+
+public class FrameOutputDataEditorContainer:Editor
+{
+    public FrameOutputData outputData;
 }

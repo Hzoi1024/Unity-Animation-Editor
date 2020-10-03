@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
@@ -10,12 +10,15 @@ public class EditorAminaComponentClip:ScriptableObject
     public int ID;
     public int CompID;
     public string Name;
+    public int[] PauseTime;
 
     public int FramesCount { get { return Frames.Count; } }
 
     [SerializeField]
     public List<EditorAminaComponentClipData> Frames;
     public List<int> GeneralKeysIndex;
+    [SerializeField]
+    public List<FrameOutputData> OutData;
 
     [SerializeField]
     public AminaFrame defaultAminaFrame;
@@ -24,10 +27,11 @@ public class EditorAminaComponentClip:ScriptableObject
     {
         Frames = new List<EditorAminaComponentClipData>();
         GeneralKeysIndex = new List<int>();
-
+        OutData = new List<FrameOutputData>();
         defaultAminaFrame = new AminaFrame();
         defaultAminaFrame.pos = Vector2.zero;
         defaultAminaFrame.angle = 0;
+        PauseTime = null;
     }
 
     public void Init(int _id,int _compID, Vector2 _xy,float _angle)
@@ -45,6 +49,11 @@ public class EditorAminaComponentClip:ScriptableObject
         Name = _ori.Name;
         defaultAminaFrame.pos = new Vector2(_ori.defaultAminaFrame.pos.x, _ori.defaultAminaFrame.pos.y);
         defaultAminaFrame.angle = _ori.defaultAminaFrame.angle;
+        if (_ori.PauseTime == null)
+        {
+            Debug.Log("pasue null");
+        }
+        PauseTime = _ori.PauseTime;
 
         for(int i = 0; i < _ori.GeneralKeysIndex.Count; i++)
         {
@@ -55,6 +64,13 @@ public class EditorAminaComponentClip:ScriptableObject
         {
             EditorAminaComponentClipData _newframe = new EditorAminaComponentClipData(_ori.Frames[i]);
             Frames.Add(_newframe);
+        }
+
+        OutData = new List<FrameOutputData>();
+        for (int i = 0; i < _ori.OutData.Count; i++)
+        {
+            FrameOutputData _new = new FrameOutputData(_ori.OutData[i]);
+            OutData.Add(_new);
         }
     }
 
@@ -68,7 +84,7 @@ public class EditorAminaComponentClip:ScriptableObject
 
         Frames = new List<EditorAminaComponentClipData>();
         GeneralKeysIndex = new List<int>();
-
+        PauseTime = null;
         defaultAminaFrame = new AminaFrame();
         defaultAminaFrame.pos = Vector2.zero;
         defaultAminaFrame.angle = 0;
@@ -2324,6 +2340,30 @@ public class EditorAminaComponentClip:ScriptableObject
         return _deltaDis/(_deltaIndex*_deltaIndex);
     }
 
+    public void AddPauseTime(int[] _index)
+    {
+        if (_index == null) { PauseTime = null;return; }
+
+        if (_index.Length != 2)
+        {
+            Debug.LogWarning("AddPauseTime should leghth==2  "+ _index);
+            return;
+        }
+
+        int[] _pause;
+
+        if (_index[0] <= _index[1]) _pause = new int[2] { _index[0], _index[1] };
+        else { _pause = new int[2] { _index[1], _index[0] }; }
+
+        if(_pause[0]<0|| _pause[1] >= FramesCount)
+        {
+            Debug.LogWarning("AddPauseTime out of range   _index=" + _index);
+            return;
+        }
+
+        PauseTime = _pause;
+    }
+
     public bool IsTheIndexHaveKey(int _index,FrameParaType _pType)
     {
         if (_index < Frames.Count)
@@ -2388,6 +2428,58 @@ public class EditorAminaComponentClip:ScriptableObject
         return KeyType.NotKey;
 
     }
+
+    public void AddOutput(int _index)
+    {
+        for(int i = 0; i < OutData.Count; i++)
+        {
+            if (OutData[i].Index == _index)
+            {
+                Debug.LogWarning("can not add output,index=" + _index);
+                return;
+            }
+        }
+
+        OutData.Add(new FrameOutputData(_index));
+    }
+
+    public void DeleteOutput(int _index)
+    {
+        for (int i = 0; i < OutData.Count; i++)
+        {
+            if (OutData[i].Index == _index)
+            {
+                OutData.RemoveAt(i);
+                return;
+            }
+        }
+
+        Debug.LogWarning("can not delete output,index=" + _index);
+    }
+
+    public void MoveOutput(int _index,int _newIndex)
+    {
+        FrameOutputData _target=null;
+        
+        for (int i = 0; i < OutData.Count; i++)
+        {
+            if (OutData[i].Index == _newIndex)
+            {
+                return;
+            }
+
+            if (OutData[i].Index == _index)
+            {
+                _target= OutData[i];
+            }
+        }
+
+        if (_target != null)
+        {
+            _target.SetIndex(_newIndex);
+        }
+    }
+
 
     [Serializable]
     public class EditorAminaComponentClipData
@@ -2480,6 +2572,48 @@ public class EditorAminaComponentClip:ScriptableObject
     }
 
 }
+
+[Serializable]
+public class FrameOutputData
+{
+    [SerializeField]
+    public int Index { get { return index; } }
+    private int index;
+    public List<OutType> Out;
+
+    public FrameOutputData() { Out = new List<OutType>(); }
+    public FrameOutputData(FrameOutputData other)
+    {
+        index = other.Index;
+        Out = new List<OutType>(other.Out);
+    }
+
+    public FrameOutputData(int _index)
+    {
+        index = _index;
+        Out = new List<OutType>();
+    }
+
+    public void SetIndex(int _index)
+    {
+        index = _index;
+    }
+
+}
+
+[Serializable]
+public enum OutType
+{
+    onNormal = 0,
+    onFast = 1,
+    onUp =2,
+    onUpFast=3,    
+    onDown=4,
+    onDownFast=5,
+    attack=6,
+
+}
+
 
 [Serializable]
 public enum KeyType

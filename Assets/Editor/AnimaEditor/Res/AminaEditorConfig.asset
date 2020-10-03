@@ -16,4 +16,6 @@ MonoBehaviour:
   Blue: {fileID: 2800000, guid: 82bc436bbe1e7914fb4e940d9349bace, type: 3}
   PlayTex: {fileID: 2800000, guid: ca6fbe46faa6d0847b11904a154e98f5, type: 3}
   PlayingTex: {fileID: 2800000, guid: fbb4ee1e678f5bb46905582e0d9b68b5, type: 3}
+  Button: {fileID: 2800000, guid: e5a71dfdf09318249ab3445e664575bb, type: 3}
+  ButtonActive: {fileID: 2800000, guid: 68112b4b78852704bb3453446e87cbf4, type: 3}
   Humanoid: {fileID: 1644267861753738, guid: a7ac52f81bd4c944988c39a6c8ef5b7d, type: 3}

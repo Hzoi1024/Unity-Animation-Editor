@@ -10,6 +10,9 @@ public class AminaEditorConfigSO : ScriptableObject
     public Texture2D PlayTex;
     public Texture2D PlayingTex;
 
+    public Texture2D Button;
+    public Texture2D ButtonActive;
+
     public GameObject Humanoid;
 
 

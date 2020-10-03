@@ -164,6 +164,11 @@ public class AminaEditorUndo
         AddOperation(new AEUndoOperation_MoveKey(aminaEditor, _list, _delta));
     }
 
+    public void AddPauseTime(int _compIndex,int[] _pasueTime)
+    {
+        AddOperation(new AEUndoOperation_AddPauseTime(aminaEditor, _compIndex, _pasueTime));
+    }
+
     public void UndoOperation()
     {
         if (pointer > 0)
@@ -851,6 +856,36 @@ public class AEUndoOperation_Complex : AminaEditorUndoOperation
         {
             ami.UndoOperation();
         }
+    }
+
+}
+
+public class AEUndoOperation_AddPauseTime:AminaEditorUndoOperation
+{
+    public int CompIndex;
+    public int[] OldPaues;
+    public int[] Pause;
+
+    public AEUndoOperation_AddPauseTime(AminaEditor ae,int _compIndex,int[] _pause):base(ae)
+    {
+        CompIndex = _compIndex;
+        OldPaues = ae.Components[CompIndex].clip.PauseTime;
+        Pause = _pause;
+    }
+
+    public override void FirstOperation()
+    {
+        aminaEditor.Components[CompIndex].clip.AddPauseTime(Pause);
+    }
+
+    public override void DoOperation()
+    {
+        aminaEditor.Components[CompIndex].clip.AddPauseTime(Pause);
+    }
+
+    public override void UndoOperation()
+    {
+        aminaEditor.Components[CompIndex].clip.AddPauseTime(OldPaues);
     }
 
 }
