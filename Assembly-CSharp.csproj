@@ -66,8 +66,10 @@
     <Compile Include="Assets\AminaProcess.cs" />
     <Compile Include="Assets\AnimaComponentManager.cs" />
     <Compile Include="Assets\AnimaProtypeHumanoid.cs" />
+    <Compile Include="Assets\FramLoadManager.cs" />
     <Compile Include="Assets\GameAmina.cs" />
     <Compile Include="Assets\IAnimaProtype.cs" />
+    <Compile Include="Assets\TestScripts\PlayerAmin.cs" />
     <Reference Include="UnityEngine">
       <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>

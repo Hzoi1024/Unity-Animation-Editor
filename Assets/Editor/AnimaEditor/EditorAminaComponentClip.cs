@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
@@ -29,7 +29,8 @@ public class EditorAminaComponentClip:ScriptableObject
         GeneralKeysIndex = new List<int>();
         OutData = new List<FrameOutputData>();
         defaultAminaFrame = new AminaFrame();
-        defaultAminaFrame.pos = Vector2.zero;
+        defaultAminaFrame.x = 0;
+        defaultAminaFrame.y = 0;
         defaultAminaFrame.angle = 0;
         PauseTime = null;
     }
@@ -38,7 +39,8 @@ public class EditorAminaComponentClip:ScriptableObject
     {
         ID = _id;
         CompID = _compID;
-        defaultAminaFrame.pos = new Vector2(_xy.x, _xy.y);
+        defaultAminaFrame.x = _xy.x;
+        defaultAminaFrame.y = _xy.y;
         defaultAminaFrame.angle = _angle;
     }
 
@@ -47,7 +49,9 @@ public class EditorAminaComponentClip:ScriptableObject
         ID = _ori.ID;
         CompID = _ori.CompID;
         Name = _ori.Name;
-        defaultAminaFrame.pos = new Vector2(_ori.defaultAminaFrame.pos.x, _ori.defaultAminaFrame.pos.y);
+        defaultAminaFrame.x = _ori.defaultAminaFrame.x;
+        defaultAminaFrame.y = _ori.defaultAminaFrame.y;
+
         defaultAminaFrame.angle = _ori.defaultAminaFrame.angle;
         if (_ori.PauseTime == null)
         {
@@ -86,7 +90,8 @@ public class EditorAminaComponentClip:ScriptableObject
         GeneralKeysIndex = new List<int>();
         PauseTime = null;
         defaultAminaFrame = new AminaFrame();
-        defaultAminaFrame.pos = Vector2.zero;
+        defaultAminaFrame.x = 0;
+        defaultAminaFrame.y = 0;
         defaultAminaFrame.angle = 0;
 
         Init(_other);
@@ -477,13 +482,13 @@ public class EditorAminaComponentClip:ScriptableObject
                 {
                     EditorAminaComponentClipData _newCD = new EditorAminaComponentClipData(i);
                     _newCD.x = _x;
-                    _newCD.y = defaultAminaFrame.pos.y;
+                    _newCD.y = defaultAminaFrame.y;
                     _newCD.angle = defaultAminaFrame.angle;
                     Frames.Add(_newCD);
                 }
                 EditorAminaComponentClipData _newKey = new EditorAminaComponentClipData(_index);
                 _newKey.x = _x;
-                _newKey.y = defaultAminaFrame.pos.y;
+                _newKey.y = defaultAminaFrame.y;
                 _newKey.angle = defaultAminaFrame.angle;
                 _newKey.XKey = _keyType;
                 _newKey.XfillPara = _fillPara;
@@ -619,13 +624,13 @@ public class EditorAminaComponentClip:ScriptableObject
                 for (int i = 0; i < _index; i++)
                 {
                     EditorAminaComponentClipData _newCD = new EditorAminaComponentClipData(i);
-                    _newCD.x = defaultAminaFrame.pos.x;
+                    _newCD.x = defaultAminaFrame.x;
                     _newCD.y = _y;
                     _newCD.angle = defaultAminaFrame.angle;
                     Frames.Add(_newCD);
                 }
                 EditorAminaComponentClipData _newKey = new EditorAminaComponentClipData(_index);
-                _newKey.x = defaultAminaFrame.pos.x;
+                _newKey.x = defaultAminaFrame.x;
                 _newKey.y = _y;
                 _newKey.angle = defaultAminaFrame.angle;
                 _newKey.YKey = _keyType;
@@ -761,14 +766,14 @@ public class EditorAminaComponentClip:ScriptableObject
                 for (int i = 0; i < _index; i++)
                 {
                     EditorAminaComponentClipData _newCD = new EditorAminaComponentClipData(i);
-                    _newCD.x = defaultAminaFrame.pos.x;
-                    _newCD.y = defaultAminaFrame.pos.y;
+                    _newCD.x = defaultAminaFrame.x;
+                    _newCD.y = defaultAminaFrame.y;
                     _newCD.angle = _a;
                     Frames.Add(_newCD);
                 }
                 EditorAminaComponentClipData _newKey = new EditorAminaComponentClipData(_index);
-                _newKey.x = defaultAminaFrame.pos.x;
-                _newKey.y = defaultAminaFrame.pos.y;
+                _newKey.x = defaultAminaFrame.x;
+                _newKey.y = defaultAminaFrame.y;
                 _newKey.angle = _a;
                 _newKey.AKey = _keyType;
                 _newKey.AfillPara = _fillPara;
@@ -1171,7 +1176,7 @@ public class EditorAminaComponentClip:ScriptableObject
 
             for (int i = 0; i < Frames.Count; i++)
             {
-                Frames[i].x = defaultAminaFrame.pos.x;
+                Frames[i].x = defaultAminaFrame.x;
             }
             Frames[_keyIndex].XKey = KeyType.NotKey;
             Frames[_keyIndex].XfillPara = null;
@@ -1220,7 +1225,7 @@ public class EditorAminaComponentClip:ScriptableObject
                 float _newX;
                 if (_preXIndex == -1)
                 {
-                    _newX = defaultAminaFrame.pos.x;
+                    _newX = defaultAminaFrame.x;
                 }
                 else
                 {
@@ -1242,7 +1247,7 @@ public class EditorAminaComponentClip:ScriptableObject
         {
             for(int i = 0; i < Frames.Count; i++)
             {
-                Frames[i].x = defaultAminaFrame.pos.x;
+                Frames[i].x = defaultAminaFrame.x;
             }
         }else if(_preXIndex == -1)
         {
@@ -1296,7 +1301,7 @@ public class EditorAminaComponentClip:ScriptableObject
 
             for (int i = 0; i < Frames.Count; i++)
             {
-                Frames[i].y = defaultAminaFrame.pos.y;
+                Frames[i].y = defaultAminaFrame.y;
             }
             Frames[_keyIndex].YKey = KeyType.NotKey;
             Frames[_keyIndex].YfillPara = null;
@@ -1345,7 +1350,7 @@ public class EditorAminaComponentClip:ScriptableObject
                 float _newY;
                 if (_preYIndex == -1)
                 {
-                    _newY = defaultAminaFrame.pos.y;
+                    _newY = defaultAminaFrame.y;
                 }
                 else
                 {
@@ -1367,7 +1372,7 @@ public class EditorAminaComponentClip:ScriptableObject
         {
             for (int i = 0; i < Frames.Count; i++)
             {
-                Frames[i].y = defaultAminaFrame.pos.y;
+                Frames[i].y = defaultAminaFrame.y;
             }
         }
         else if (_preYIndex == -1)
@@ -2578,6 +2583,7 @@ public class FrameOutputData
 {
     [SerializeField]
     public int Index { get { return index; } }
+    [SerializeField]
     private int index;
     public List<OutType> Out;
 

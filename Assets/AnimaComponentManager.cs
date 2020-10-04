@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -35,13 +35,14 @@ public class AnimaComponentManager
                 }
             }
 
-            transform.localPosition = currentClip.frames[pointer].pos;
+            transform.localPosition = new Vector2(currentClip.frames[pointer].x, currentClip.frames[pointer].y);
             transform.localEulerAngles = new Vector3(0,0, currentClip.frames[pointer].angle);
             pointer++;
         }
         else
         {
-            transform.localPosition = Vector2.Lerp(transform.localPosition, currentClip.frames[0].pos, 1 / blankLeft);
+            Vector2 pos = new Vector2(currentClip.frames[0].x, currentClip.frames[0].y);
+            transform.localPosition = Vector2.Lerp(transform.localPosition, pos, 1 / blankLeft);
             //transform.localEulerAngles = Vector2.Lerp(transform.localEulerAngles, currentClip.frames[0].angle, 1 / blankLeft);
             transform.localEulerAngles = new Vector3(0, 0,transform.localEulerAngles.z+ tranDeltaAng);
             blankLeft--;

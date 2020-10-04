@@ -28,7 +28,7 @@ public class AminaProcess
     {
         if (Pointer < afi.Count)
         {
-            obj.transform.localPosition = afi[Pointer].pos;
+            obj.transform.localPosition = new Vector2(afi[Pointer].x, afi[Pointer].y);
             obj.transform.localEulerAngles = new Vector3(0,0,afi[Pointer].angle);
             
         }

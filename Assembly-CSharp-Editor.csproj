@@ -67,7 +67,9 @@
     <Compile Include="Assets\Editor\AnimaEditor\AminaEditorUndo.cs" />
     <Compile Include="Assets\Editor\AnimaEditor\AminaEditor_LoadFrames.cs" />
     <Compile Include="Assets\Editor\AnimaEditor\AminaEditor_SaveFrames.cs" />
+    <Compile Include="Assets\Editor\AnimaEditor\EditorAminaClip.cs" />
     <Compile Include="Assets\Editor\AnimaEditor\EditorAminaComponentClip.cs" />
+    <Compile Include="Assets\Editor\AnimaEditor\EditorDataBinary.cs" />
     <Compile Include="Assets\Editor\AnimaEditor\NewBehaviourScript.cs" />
     <Compile Include="Assets\Editor\AnimaEditor\TTest.cs" />
     <Compile Include="Assets\Editor\AnimaEditor\WindowTest.cs" />

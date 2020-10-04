@@ -11,6 +11,11 @@ public class AminaEditorPath
     public static readonly string FRAMEPATH = "Assets/Editor/AnimaEditor/Res/Frames/";
 }
 
+public enum OriginAminType
+{
+    Defualt = 0,
+    Human = 1,
+}
 
 public class AminaEditor : EditorWindow
 {
@@ -28,7 +33,7 @@ public class AminaEditor : EditorWindow
 
     public AminaEditor_LoadFrames aminaEditor_LoadFrames;
     public AminaEditor_SaveFrames aminaEditor_SaveFrames;
-
+    public EditorAminaClip clip;
     public AminaEditorConfigSO scriptableObject;
     //EditorAminaComponentClip componentClip;
     public List<AminaEditorComponetData> Components;
@@ -105,11 +110,7 @@ public class AminaEditor : EditorWindow
     double lastStartUpTime;
     
 
-    public enum OriginAminType
-    {
-        Defualt = 0,
-        Human = 1,
-    }
+    
     OriginAminType originDisplay;
 
     private void Update()
@@ -163,7 +164,7 @@ public class AminaEditor : EditorWindow
         editorUndo = new AminaEditorUndo(this);
         LabelStyle = new GUIStyle();
         LabelStyle.alignment = TextAnchor.MiddleLeft;
-
+        LabelStyle.clipping = TextClipping.Clip;
         isDragging = false;
         isDrawingPause = false;
         pauseComponetIndex = -1;
@@ -172,6 +173,7 @@ public class AminaEditor : EditorWindow
         outPutOffset = 0;
 
         outputDataEditorContainer = ScriptableObject.CreateInstance<FrameOutputDataEditorContainer>();
+        clip = ScriptableObject.CreateInstance<EditorAminaClip>();
     }
     
 
@@ -180,9 +182,7 @@ public class AminaEditor : EditorWindow
         topBlockHeight = 30;
         Event eventCurrent = Event.current;
 
-
-        OriginAminType choseOriginAminType;
-        choseOriginAminType = (OriginAminType)EditorGUI.EnumPopup(new Rect(0, 0, 100, topBlockHeight),originDisplay);
+        OriginAminType choseOriginAminType = (OriginAminType)EditorGUI.EnumPopup(new Rect(0, 0, 100, topBlockHeight),originDisplay);
         if (choseOriginAminType != originDisplay)
         {
             ProtypeInit(choseOriginAminType);
@@ -201,6 +201,28 @@ public class AminaEditor : EditorWindow
         else
         {
             GUI.Box(playBox, playTex, NilStyle);
+        }
+
+        Rect clipButton = new Rect(120, 8, 16, 16);
+
+        if (GUI.Button(clipButton, ""))
+        {
+            if(originDisplay!= OriginAminType.Defualt)
+            {
+                EditorAminaClipLoadWindow clipLoadWindow = GetWindow<EditorAminaClipLoadWindow>(false, "Load Clip", true);
+                clipLoadWindow.minSize = new Vector2(250, 250);
+                clipLoadWindow.position = new Rect(clipButton.xMax, position.y, 250, 250);
+                clipLoadWindow.Init(this, originDisplay);
+            }
+            
+        }
+
+        if (clip != null)
+        {
+            if (GUI.Button(new Rect(clipButton.xMax,0, playBox.x- clipButton.xMax, topBlockHeight),clip.name, LabelStyle))
+            {
+                Selection.activeObject = clip;
+            }
         }
 
         //scrollView = GUI.BeginScrollView(LeftRootBlock, scrollView, new Rect(0, 0, LeftRootBlockWidth, 300));
@@ -587,6 +609,7 @@ public class AminaEditor : EditorWindow
                                         outPutSelect = new Vector2Int(_para.x, _para.y);
                                         DraggingOn(6);
                                     }
+                                    //FrameOutputData _newOutData = new FrameOutputData(Components[_para.x].clip.OutData[m]);
                                     outputDataEditorContainer.outputData = Components[_para.x].clip.OutData[m];
                                     Selection.activeObject=outputDataEditorContainer;
 
@@ -1063,10 +1086,12 @@ public class AminaEditor : EditorWindow
     void ProtypeRecycle()
     {
         Components = new List<AminaEditorComponetData>();
+        
         if (protype != null)
         {
             DestroyImmediate(protype);
             protype = null;
+            clip = null;
         }
     }
 
@@ -1618,9 +1643,9 @@ public class AminaEditor : EditorWindow
 
     public void LoadClip(int _compID,EditorAminaComponentClip _other)
     {
-        Debug.Log("other frames count="+_other.Frames.Count);
-
-        for(int i = 0; i < Components.Count; i++)
+        //Debug.Log("other frames count="+_other.Frames.Count);
+        Selection.activeObject = null;
+        for (int i = 0; i < Components.Count; i++)
         {
             if (Components[i].componentID == _compID)
             {
@@ -1631,9 +1656,38 @@ public class AminaEditor : EditorWindow
                 return;
             }
         }
-        outputDataEditorContainer.outputData = null;
-        Selection.activeObject = null;
+        //outputDataEditorContainer.outputData = null;
         Debug.LogWarning("LoadClip failed,don't have this compID=" + _compID);
+    }
+
+    public void LoadEditorAminaClip(EditorAminaClip _eac)
+    {
+        clip = _eac;
+        string[] _all = System.IO.Directory.GetFiles(AminaEditorPath.FRAMEPATH, "*.asset", System.IO.SearchOption.AllDirectories);
+        List<int> _cId = new List<int>(_eac.compFramesID);
+        if (_cId.Count > 0)
+        {
+            for (int i = 0; i < _all.Length; i++)
+            {
+                EditorAminaComponentClip _new = AssetDatabase.LoadAssetAtPath<EditorAminaComponentClip>(_all[i]);
+                if (_new != null)
+                {
+                    for(int j=0;j< _cId.Count; j++)
+                    {
+                        if (_new.ID == _cId[j])
+                        {
+                            LoadClip(_new.CompID, _new);
+                            _cId.RemoveAt(j);
+                            if (_cId.Count == 0)
+                            {
+                                return;
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public class AminaEditorComponetData
