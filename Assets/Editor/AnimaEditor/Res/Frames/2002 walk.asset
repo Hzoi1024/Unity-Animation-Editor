@@ -1,0 +1,243 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9cd6cea52c24f5b40a73ef513a9d9ebb, type: 3}
+  m_Name: 2002 walk
+  m_EditorClassIdentifier: 
+  ID: 2002
+  CompID: 2
+  Name: walk
+  PauseTime: 
+  AdvanceEnd: 1
+  Frames:
+  - Index: 0
+    x: 0.043333292
+    y: 0.18711111
+    angle: 0
+    XKey: 1
+    YKey: 1
+    AKey: 1
+  - Index: 1
+    x: 0.04499994
+    y: 0.18566667
+    angle: 0
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 2
+    x: 0.046666585
+    y: 0.18422222
+    angle: 0
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 3
+    x: 0.04833323
+    y: 0.18277778
+    angle: 0
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 4
+    x: 0.049999878
+    y: 0.18133333
+    angle: 0
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 5
+    x: 0.051666524
+    y: 0.17988889
+    angle: 0
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 6
+    x: 0.05333317
+    y: 0.17844445
+    angle: 0
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 7
+    x: 0.05499983
+    y: 0.17700002
+    angle: 0
+    XKey: 1
+    YKey: 1
+    AKey: 1
+  - Index: 8
+    x: 0.052499857
+    y: 0.17916667
+    angle: 0
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 9
+    x: 0.049999885
+    y: 0.18133333
+    angle: 0
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 10
+    x: 0.047499914
+    y: 0.18349999
+    angle: 0
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 11
+    x: 0.044999942
+    y: 0.18566665
+    angle: 0
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 12
+    x: 0.04249997
+    y: 0.18783331
+    angle: 0
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 13
+    x: 0.04
+    y: 0.19
+    angle: 0
+    XKey: 1
+    YKey: 1
+    AKey: 1
+  - Index: 14
+    x: 0.041666646
+    y: 0.18855555
+    angle: 0
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 15
+    x: 0.043333292
+    y: 0.18711111
+    angle: 0
+    XKey: 1
+    YKey: 1
+    AKey: 1
+  - Index: 16
+    x: 0.04499994
+    y: 0.18566667
+    angle: 0
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 17
+    x: 0.046666585
+    y: 0.18422222
+    angle: 0
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 18
+    x: 0.04833323
+    y: 0.18277778
+    angle: 0
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 19
+    x: 0.049999878
+    y: 0.18133333
+    angle: 0
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 20
+    x: 0.051666524
+    y: 0.17988889
+    angle: 0
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 21
+    x: 0.05333317
+    y: 0.17844445
+    angle: 0
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 22
+    x: 0.05499983
+    y: 0.17700002
+    angle: 0
+    XKey: 1
+    YKey: 1
+    AKey: 1
+  - Index: 23
+    x: 0.052499857
+    y: 0.17916667
+    angle: 0
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 24
+    x: 0.049999885
+    y: 0.18133333
+    angle: 0
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 25
+    x: 0.047499914
+    y: 0.18349999
+    angle: 0
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 26
+    x: 0.044999942
+    y: 0.18566665
+    angle: 0
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 27
+    x: 0.04249997
+    y: 0.18783331
+    angle: 0
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 28
+    x: 0.04
+    y: 0.19
+    angle: 0
+    XKey: 1
+    YKey: 1
+    AKey: 1
+  - Index: 29
+    x: 0.041666646
+    y: 0.18855555
+    angle: 0
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 30
+    x: 0.043333292
+    y: 0.18711111
+    angle: 0
+    XKey: 1
+    YKey: 1
+    AKey: 1
+  GeneralKeysIndex: 00000000070000000d0000000f000000160000001c0000001e000000
+  OutData: []
+  defaultAminaFrame:
+    x: 0.05499983
+    y: 0.17700002
+    angle: 0

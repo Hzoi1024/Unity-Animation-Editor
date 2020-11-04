@@ -1,0 +1,103 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9cd6cea52c24f5b40a73ef513a9d9ebb, type: 3}
+  m_Name: '[frames]3003 attack'
+  m_EditorClassIdentifier: 
+  ID: 3003
+  CompID: 3
+  Name: attack
+  PauseTime: 
+  AdvanceEnd: 0
+  Frames:
+  - Index: 0
+    x: 0.21651077
+    y: 0.16499999
+    angle: 0
+    XKey: 1
+    YKey: 1
+    AKey: 1
+  - Index: 1
+    x: 0.2255597
+    y: 0.16409999
+    angle: 0
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 2
+    x: 0.23460862
+    y: 0.16319999
+    angle: 0
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 3
+    x: 0.24365754
+    y: 0.16229999
+    angle: 0
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 4
+    x: 0.25270647
+    y: 0.16139999
+    angle: 0
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 5
+    x: 0.2617554
+    y: 0.16049999
+    angle: 0
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 6
+    x: 0.27080435
+    y: 0.15959999
+    angle: 0
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 7
+    x: 0.27985328
+    y: 0.15869999
+    angle: 0
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 8
+    x: 0.28890222
+    y: 0.15779999
+    angle: 0
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 9
+    x: 0.29795116
+    y: 0.15689999
+    angle: 0
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 10
+    x: 0.307
+    y: 0.156
+    angle: 0
+    XKey: 1
+    YKey: 1
+    AKey: 1
+  GeneralKeysIndex: 000000000a000000
+  OutData: []
+  defaultAminaFrame:
+    x: 0.21651077
+    y: 0.16499999
+    angle: 0

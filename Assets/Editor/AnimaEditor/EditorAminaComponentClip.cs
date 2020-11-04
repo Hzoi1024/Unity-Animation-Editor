@@ -11,6 +11,7 @@ public class EditorAminaComponentClip:ScriptableObject
     public int CompID;
     public string Name;
     public int[] PauseTime;
+    public int AdvanceEnd;
 
     public int FramesCount { get { return Frames.Count; } }
 
@@ -33,6 +34,7 @@ public class EditorAminaComponentClip:ScriptableObject
         defaultAminaFrame.y = 0;
         defaultAminaFrame.angle = 0;
         PauseTime = null;
+        AdvanceEnd = 0;
     }
 
     public void Init(int _id,int _compID, Vector2 _xy,float _angle)
@@ -51,6 +53,7 @@ public class EditorAminaComponentClip:ScriptableObject
         Name = _ori.Name;
         defaultAminaFrame.x = _ori.defaultAminaFrame.x;
         defaultAminaFrame.y = _ori.defaultAminaFrame.y;
+        AdvanceEnd = _ori.AdvanceEnd;
 
         defaultAminaFrame.angle = _ori.defaultAminaFrame.angle;
         if (_ori.PauseTime == null)
@@ -2164,6 +2167,7 @@ public class EditorAminaComponentClip:ScriptableObject
 
     void SineFillFrame(int _start, int _end, FrameParaType _type,IFrameFillPara _frameFillPara)
     {
+        Debug.Log("SineFillFrame");
         SineKeyFillPara _sineFillPara = _frameFillPara as SineKeyFillPara;
         if (_sineFillPara == null)
         {
@@ -2303,9 +2307,7 @@ public class EditorAminaComponentClip:ScriptableObject
                 for (int i = 1; i < _deltaFrames; i++)
                 {
                     float _ang = _startAng + _deltaRadias * i;
-                    float _sinAng = 0;
-                    if (_ang > HALFPI) _sinAng = 2 - Mathf.Sin(_ang);
-                    else _sinAng = Mathf.Sin(_ang);
+                    float _sinAng = 1 - Mathf.Cos(_ang);
                     float _k = (_sinAng - _sinSt) / _sinDis;
                     //float _d = Mathf.Sin(_deltaRadias * i);
                     float _y = _startP + _disP * _k;
@@ -2320,9 +2322,7 @@ public class EditorAminaComponentClip:ScriptableObject
                 for (int i = 1; i < _deltaFrames; i++)
                 {
                     float _ang = _startAng + _deltaRadias * i;
-                    float _sinAng = 0;
-                    if (_ang > HALFPI) _sinAng = 2 - Mathf.Sin(_ang);
-                    else _sinAng = Mathf.Sin(_ang);
+                    float _sinAng = 1 - Mathf.Cos(_ang);
                     float _k = (_sinAng - _sinSt) / _sinDis;
                     //float _d = Mathf.Sin(_deltaRadias * i);
                     float _a = _startP + _disP * _k;

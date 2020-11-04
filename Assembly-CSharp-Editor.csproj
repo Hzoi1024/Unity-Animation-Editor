@@ -63,16 +63,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Editor\AnimaEditor\AminaEditor.cs" />
+    <Compile Include="Assets\Editor\AnimaEditor\AminaEditorAtlas.cs" />
+    <Compile Include="Assets\Editor\AnimaEditor\AminaEditorComponetData.cs" />
     <Compile Include="Assets\Editor\AnimaEditor\AminaEditorConfigSO.cs" />
     <Compile Include="Assets\Editor\AnimaEditor\AminaEditorUndo.cs" />
+    <Compile Include="Assets\Editor\AnimaEditor\AminaEditor_LoadAtlas.cs" />
     <Compile Include="Assets\Editor\AnimaEditor\AminaEditor_LoadFrames.cs" />
     <Compile Include="Assets\Editor\AnimaEditor\AminaEditor_SaveFrames.cs" />
+    <Compile Include="Assets\Editor\AnimaEditor\AnimaFilesRecycle.cs" />
+    <Compile Include="Assets\Editor\AnimaEditor\EditorAminaAtlas.cs" />
     <Compile Include="Assets\Editor\AnimaEditor\EditorAminaClip.cs" />
     <Compile Include="Assets\Editor\AnimaEditor\EditorAminaComponentClip.cs" />
     <Compile Include="Assets\Editor\AnimaEditor\EditorDataBinary.cs" />
-    <Compile Include="Assets\Editor\AnimaEditor\NewBehaviourScript.cs" />
-    <Compile Include="Assets\Editor\AnimaEditor\TTest.cs" />
-    <Compile Include="Assets\Editor\AnimaEditor\WindowTest.cs" />
+    <Compile Include="Assets\Editor\TexurePacker\UIImageSetSizeAndPivot.cs" />
+    <None Include="Assets\Editor\TexurePacker\SettingsTexturePackerImporter.txt" />
     <Reference Include="UnityEngine">
       <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>
@@ -273,6 +277,9 @@
     </Reference>
     <Reference Include="SyntaxTree.VisualStudio.Unity.Bridge">
       <HintPath>C:/Program Files (x86)/Microsoft Visual Studio Tools for Unity/15.0/Editor/SyntaxTree.VisualStudio.Unity.Bridge.dll</HintPath>
+    </Reference>
+    <Reference Include="TexturePackerImporter">
+      <HintPath>C:/Users/Administrator/Desktop/Unity实验/动画实验/Assets/Editor/TexurePacker/TexturePackerImporter.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
       <HintPath>C:/Users/Administrator/Desktop/Unity实验/动画实验/Library/PackageCache/com.unity.ext.nunit@1.0.0/net35/unity-custom/nunit.framework.dll</HintPath>

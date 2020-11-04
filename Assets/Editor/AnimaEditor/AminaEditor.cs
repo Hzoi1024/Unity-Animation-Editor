@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
@@ -9,12 +9,14 @@ public class AminaEditorPath
 {
     public static readonly string CLIPPATH= "Assets/Editor/AnimaEditor/Res/Clips/";
     public static readonly string FRAMEPATH = "Assets/Editor/AnimaEditor/Res/Frames/";
+    public static readonly string ATLASPATH = "Assets/Editor/AnimaEditor/Res/Atlas/";
 }
 
 public enum OriginAminType
 {
     Defualt = 0,
     Human = 1,
+    SpriteFrames=2,
 }
 
 public class AminaEditor : EditorWindow
@@ -37,6 +39,7 @@ public class AminaEditor : EditorWindow
     public AminaEditorConfigSO scriptableObject;
     //EditorAminaComponentClip componentClip;
     public List<AminaEditorComponetData> Components;
+    public AminaEditorAtlas atlas;
     int componentParaCount;
 
     List<CopyKeyData> copies;
@@ -66,6 +69,7 @@ public class AminaEditor : EditorWindow
     int outPutOffset;
     Vector2Int outPutSelect;
     FrameOutputDataEditorContainer outputDataEditorContainer;
+    SpriteFrameContainer spriteFrameContainer;
 
     //bool isDraggingKeyFrames = false;//拖拽关键帧
     int draggingKeyFramesBase;
@@ -137,6 +141,15 @@ public class AminaEditor : EditorWindow
         }
     }
 
+    private void OnInspectorUpdate()
+    {
+        if (atlas != null && atlas.Examin())
+        {
+            Repaint();
+            GetRightBlockFrameMaxNumber();
+        }
+    }
+
     void OnEnable()
     {
         //scriptableObject = AssetDatabase.LoadAssetAtPath<AminaEditorConfigSO>("Assets/Editor/AnimaEditor" + "/AminaEditorConfig.asset");
@@ -171,7 +184,7 @@ public class AminaEditor : EditorWindow
 
         outPutSelect = new Vector2Int(-1, -1);
         outPutOffset = 0;
-
+        spriteFrameContainer = ScriptableObject.CreateInstance<SpriteFrameContainer>();
         outputDataEditorContainer = ScriptableObject.CreateInstance<FrameOutputDataEditorContainer>();
         clip = ScriptableObject.CreateInstance<EditorAminaClip>();
     }
@@ -214,7 +227,6 @@ public class AminaEditor : EditorWindow
                 clipLoadWindow.position = new Rect(clipButton.xMax, position.y, 250, 250);
                 clipLoadWindow.Init(this, originDisplay);
             }
-            
         }
 
         if (clip != null)
@@ -224,10 +236,6 @@ public class AminaEditor : EditorWindow
                 Selection.activeObject = clip;
             }
         }
-
-        //scrollView = GUI.BeginScrollView(LeftRootBlock, scrollView, new Rect(0, 0, LeftRootBlockWidth, 300));
-        //scriptableObject = AssetDatabase.LoadAssetAtPath<AminaEditorConfigSO>("Assets/Editor" + "/AminaEditorConfig.asset");
-        //GUI.EndScrollView();
 
         float _scrollHeight=0;
 
@@ -262,6 +270,17 @@ public class AminaEditor : EditorWindow
                 }
                 eventCurrent.Use();
             }
+
+            if (atlas != null)
+            {
+                Rect leftAtlasBlock = new Rect(0, topBlockHeight+ conponentClipBoxHeight * (Components.Count + componentParaCount), LeftRootBlock.width, conponentClipBoxHeight);
+                if (leftAtlasBlock.Contains(eventCurrent.mousePosition))
+                {
+                    Selection.activeObject = atlas.atlas;
+                }
+                eventCurrent.Use();
+            }
+
         }
 
 
@@ -521,6 +540,7 @@ public class AminaEditor : EditorWindow
                         menu.AddItem(new GUIContent("Add key Sine"), false, CallSinKeyWindow, _addkeyPara);
                         menu.AddItem(new GUIContent("Add key Cosine"), false, CallCosKeyWindow, _addkeyPara);
                         menu.AddItem(new GUIContent("Add Pause"), false, AddPauseOrder, _addkeyPara);
+                        menu.AddItem(new GUIContent("Set AdvanceEnd"), false, CallSetAdvanceEndWindow);
                         if (Components[_addkeyPara.x].clip.IsTheIndexHaveKey(_frameIndex, _addkeyPara.z))
                         {
                             menu.AddItem(new GUIContent("Delete key"), false, DeleteKey, _addkeyPara);
@@ -682,6 +702,21 @@ public class AminaEditor : EditorWindow
                         
                     }
                 }
+
+                if (atlas != null && eventCurrent.type== EventType.MouseDown)
+                {
+                    Rect atlasEditorBlock = new Rect(_aminaTopBlock.x, topBlockHeight+ conponentClipBoxHeight * (Components.Count + componentParaCount), _aminaTopBlock.width, conponentClipBoxHeight);
+                    if (atlasEditorBlock.Contains(eventCurrent.mousePosition))
+                    {
+                        int _frameIndex = Convert.ToInt16(Rect.PointToNormalized(atlasEditorBlock, eventCurrent.mousePosition).x * _aminaTopBlock.width / frameBlockWidth) - 1;
+                        SpriteFrame _s= atlas.GetSpriteFrame(_frameIndex);
+                        if (_s != null)
+                        {
+                            spriteFrameContainer.sprite = _s;
+                            Selection.activeObject = spriteFrameContainer;
+                        }
+                    }
+                }
             }
 
             if (eventCurrent.rawType == EventType.KeyUp)
@@ -803,6 +838,10 @@ public class AminaEditor : EditorWindow
                     // All GUI.Window or GUILayout.Window must come inside here
                     TrigonoInputWindowRect = GUILayout.Window(2, TrigonoInputWindowRect, CosineWindow, "Add Cosine key");
                     break;
+                case 3:
+                    // All GUI.Window or GUILayout.Window must come inside here
+                    TrigonoInputWindowRect = GUILayout.Window(3, TrigonoInputWindowRect, SetAdvanceEndWindow, "Set AdvanceEnd");
+                    break;
                 default:
                     Debug.LogWarning("WindowControl wrong ! WindowControl=" + WindowControl);
                     isShowWindow = false;
@@ -823,6 +862,7 @@ public class AminaEditor : EditorWindow
     //float SineInput_delDis=0;
     float SineInput_startAngle = 0;
     float SineInput_endAngl = 0;
+    int AdvanceEndInput = 0;
 
     void SineWindow(int unusedWindowID)
     {
@@ -867,6 +907,34 @@ public class AminaEditor : EditorWindow
         GUI.DragWindow();
     }
 
+    void SetAdvanceEndWindow(int unusedWindowID)
+    {
+        //SineInput_delDis = EditorGUILayout.FloatField("Delta Distance:", SineInput_delDis);
+        AdvanceEndInput = EditorGUILayout.IntField("Start Angle:", AdvanceEndInput);
+
+        if (GUI.Button(TrigonoInputWindow_EnterButton, "Set"))
+        {
+            AdvanceEndInput = Mathf.Max(0, AdvanceEndInput);
+
+            for (int i = 0; i < Components.Count; i++)
+            {
+                if (Components[i].clip.FramesCount > 0)
+                {
+                    Components[i].clip.AdvanceEnd = AdvanceEndInput;
+                }
+            }
+
+            GetRightBlockFrameMaxNumber();
+
+            isShowWindow = false;
+        }
+        if (GUI.Button(TrigonoInputWindow_ExitButton, "Cancel"))
+        {
+            isShowWindow = false;
+        }
+        GUI.DragWindow();
+    }
+
     public void CallSinKeyWindow(object k)
     {
         WindowControl = 1;
@@ -878,6 +946,12 @@ public class AminaEditor : EditorWindow
     {
         WindowControl = 2;
         TrigonoInputWindowIndex = (Vector3Int)k;
+        isShowWindow = true;
+    }
+
+    public void CallSetAdvanceEndWindow()
+    {
+        WindowControl = 3;
         isShowWindow = true;
     }
 
@@ -1106,7 +1180,6 @@ public class AminaEditor : EditorWindow
         ProtypeRecycle();
         copies = new List<CopyKeyData>();
         ClearSelectKey();
-        GetRightBlockFrameMaxNumber();
         switch (protypeType)
         {
             case OriginAminType.Human:
@@ -1124,11 +1197,21 @@ public class AminaEditor : EditorWindow
                 Components.Add(_bHand);
                 Components.Add(_fLeg);
                 Components.Add(_bLeg);
+                atlas = null;
+                break;
+            case OriginAminType.SpriteFrames:
+                protype = new GameObject("SpriteFrame");
+                protype.transform.position = Vector3.zero;
+                SpriteRenderer _sr = protype.AddComponent<SpriteRenderer>();
+                atlas = new AminaEditorAtlas(_sr);
+
                 break;
             default:
+                atlas = null;
                 break;
         }
 
+        GetRightBlockFrameMaxNumber();
     }
 
     void DrawLeftComponent()
@@ -1199,7 +1282,27 @@ public class AminaEditor : EditorWindow
 
             }
         }
-        
+
+        if (atlas != null)
+        {
+            int t = 0;
+            if (Components != null)
+            {
+                t = Components.Count;
+            }
+            EditorGUI.DrawRect(new Rect(0, topBlockHeight + conponentClipBoxHeight * (t + componentParaCount), LeftRootBlockWidth, conponentClipBoxHeight), new Color(1, 1, 0.8f));
+
+            if (GUI.Button(new Rect(LeftRootBlockWidth - 60, topBlockHeight + conponentClipBoxHeight * (t + componentParaCount) + 4, conponentClipBoxHeight - 8, conponentClipBoxHeight - 8), "L"))
+            {
+                AminaEditor_LoadAtlas _AminaEditor_LoadAtlas = GetWindow<AminaEditor_LoadAtlas>(false, "Load Atlas", true);
+                _AminaEditor_LoadAtlas.minSize = new Vector2(250, 250);
+                _AminaEditor_LoadAtlas.position = new Rect(position.x + LeftRootBlock.width, position.y, 250, 250);
+                _AminaEditor_LoadAtlas.Init(this);
+
+            }
+
+        }
+
     }
 
     void DrawRightComponent()
@@ -1218,15 +1321,26 @@ public class AminaEditor : EditorWindow
 
             }
         }
+
+        if(atlas != null)
+        {
+            int t = 0;
+            if (Components != null)
+            {
+                t = Components.Count+ componentParaCount;
+            }
+            EditorGUI.DrawRect(new Rect(RightRootBlock.x, topBlockHeight + conponentClipBoxHeight * t, RightRootBlock.width, conponentClipBoxHeight), new Color(1, 1, 0.8f));
+        }
+
     }
 
     void DrawKeyFrame()
     {
         keySqureRadius = 5;
+        int _verticalIndex = 0;
 
         if (Components != null)
         {
-            int _verticalIndex = 0;
 
             for (int i = 0; i < Components.Count; i++)
             {
@@ -1278,6 +1392,11 @@ public class AminaEditor : EditorWindow
                     
                 }
 
+                if (Components[i].clip.AdvanceEnd > 0)
+                {
+                    int _end = Components[i].clip.GeneralKeysIndex[Components[i].clip.GeneralKeysIndex.Count - 1]- Components[i].clip.AdvanceEnd;
+                    EditorGUI.DrawRect(new Rect(RightRootBlock.x + frameBlockWidth * (_end + 1) - 2, topBlockHeight + conponentClipBoxHeight * i, 4, conponentClipBoxHeight), Color.gray);
+                }
 
                 for (int j = 0; j < Components[i].clip.GeneralKeysIndex.Count; j++)
                 {
@@ -1370,6 +1489,22 @@ public class AminaEditor : EditorWindow
                 //RightRootBlock.x + frameBlockWidth * i
             }
         }
+
+        if (atlas != null&&atlas.atlas!=null)
+        {
+            float _dY = topBlockHeight + conponentClipBoxHeight * (_verticalIndex + 0.5f);
+            float _dX;
+            SpriteFrame[] _s = atlas.atlas.sprites;
+            for (int i=0;i< _s.Length; i++)
+            {
+                int _inx = _s[i].index;
+
+                _dX = RightRootBlock.x + frameBlockWidth * (_inx + 1);
+
+                EditorGUI.DrawRect(new Rect(_dX - keySqureRadius, _dY - keySqureRadius, 2 * keySqureRadius, 2 * keySqureRadius), Color.black);
+
+            }
+        }
     }
 
     void DrawSelectRect()
@@ -1445,9 +1580,15 @@ public class AminaEditor : EditorWindow
         {
             for (int i = 0; i < Components.Count; i++)
             {
-                _max = Mathf.Max(_max, Components[i].clip.FramesCount);
+                _max = Mathf.Max(_max, Components[i].clip.FramesCount- Components[i].clip.AdvanceEnd);
             }
         }
+
+        if (atlas != null&& atlas.atlas!=null)
+        {
+            _max = Mathf.Max(_max, atlas.atlas.sprites[atlas.atlas.sprites.Length-1].index+1);
+        }
+
         realMaxFrameNum = _max;
         if (realMaxFrameNum > 0.5f) { realMaxFrameNum += 0.5f; }
         maxFrameNum = Mathf.Max(_max+20, 40);
@@ -1466,11 +1607,13 @@ public class AminaEditor : EditorWindow
 
                     Components[i].ComponentGO.transform.localPosition = new Vector2(_af.x,_af.y);
                     Components[i].ComponentGO.transform.eulerAngles = new Vector3(0, 0, _af.angle);
-
-
                 }
             }
+        }
 
+        if (atlas != null)
+        {
+            atlas.GetSprite(_index);
         }
     }
 
@@ -1690,175 +1833,12 @@ public class AminaEditor : EditorWindow
         }
     }
 
-    public class AminaEditorComponetData
+    public void LoadAtlas(EditorAminaAtlas _atlas)
     {
-        public GameObject ComponentGO;
-        public int componentID;
-        public EditorAminaComponentClip clip;
-        public string componentName;
-        public string labelStr;
-        public List<SelectedKeyData> SelectionKeyFrame;
-        public bool showComponentPara;
-        public AminaEditorComponetData(int _componentID, GameObject protype)
-        {
-            componentID = _componentID;
-            showComponentPara = false;
-            switch (_componentID)
-            {
-                case 1://头                    
-                    ComponentGO = protype.transform.Find("Sp/Head").gameObject;
-                    componentName = "Head:";
-                    break;
-                case 2://身体
-                    ComponentGO = protype.transform.Find("Sp/Body").gameObject;
-                    componentName = "Body:";
-                    break;
-                case 3://前手
-                    ComponentGO = protype.transform.Find("Sp/FHand").gameObject;
-                    componentName = "FHand:";
-                    break;
-                case 4://后手
-                    ComponentGO = protype.transform.Find("Sp/BHand").gameObject;
-                    componentName = "BHand:";
-                    break;
-                case 5://前脚
-                    ComponentGO = protype.transform.Find("Sp/FLeg").gameObject;
-                    componentName = "FLeg:";
-                    break;
-                case 6://后脚
-                    ComponentGO = protype.transform.Find("Sp/BLeg").gameObject;
-                    componentName = "BLeg:";
-                    break;
-
-            }
-            SelectionKeyFrame = new List<SelectedKeyData>();
-            labelStr = componentName + "New Frames";
-            //clip = new EditorAminaComponentClip();
-            clip = ScriptableObject.CreateInstance<EditorAminaComponentClip>();
-            clip.Init(0, componentID, ComponentGO.transform.localPosition, ComponentGO.transform.localEulerAngles.z);
-        }
-
-        public void ClearSelectionKeyFrame()
-        {
-            SelectionKeyFrame = new List<SelectedKeyData>();
-        }
-
-        public bool SelectionKeyContained(int _index,int _paraIndex)
-        {
-            if (clip.Frames.Count > _index)
-            {
-                foreach (SelectedKeyData _s in SelectionKeyFrame)
-                {
-                    if (_s.Index == _index)
-                    {
-                        switch (_paraIndex)
-                        {
-                            case 0:
-                                if (_s.all) return true;
-                                return false;
-                            case 1:
-                                if (_s.x) return true;
-                                return false;
-                            case 2:
-                                if (_s.y) return true;
-                                return false;
-                            case 3:
-                                if (_s.a) return true;
-                                return false;
-                            default:
-                                Debug.LogWarning("SelectionKeyContained wrong  _paraIndex int =" + _paraIndex);
-                                return false;
-                        }
-                    }
-                }
-            }
-            return false;
-        }
-
-        public void SelectionKeyFrameAdd(int _index, int _paraType)
-        {
-            if (clip.Frames.Count>_index&& clip.Frames[_index].isKey)
-            {
-
-
-                foreach (SelectedKeyData _s in SelectionKeyFrame)
-                {
-                    if (_s.Index == _index)
-                    {
-                        switch (_paraType)
-                        {
-                            case 0:
-                                if (clip.Frames[_index].XKey != KeyType.NotKey) _s.x = true;
-                                if (clip.Frames[_index].YKey != KeyType.NotKey) _s.y = true;
-                                if (clip.Frames[_index].AKey != KeyType.NotKey) _s.a = true;
-                                _s.all = true;
-                                //_s.all =_s.x = _s.y = _s.a = true;
-                                break;
-                            case 1:
-                                if (clip.Frames[_index].XKey != KeyType.NotKey) _s.x = true;
-                                break;
-                            case 2:
-                                if (clip.Frames[_index].YKey != KeyType.NotKey) _s.y = true;
-                                break;
-                            case 3:
-                                if (clip.Frames[_index].AKey != KeyType.NotKey) _s.a = true;
-                                break;
-                            default:
-                                Debug.LogWarning("SelectionKeyFrameAdd wrong  paraType int =" + _paraType);
-                                break;
-                        }
-                        return;
-                    }
-                }
-
-            SelectedKeyData _newSD = new SelectedKeyData(_index);
-            switch (_paraType)
-            {
-                case 0:
-                    _newSD.all = true;
-                    if (clip.Frames[_index].XKey != KeyType.NotKey) _newSD.x = true;
-                    if (clip.Frames[_index].YKey != KeyType.NotKey) _newSD.y = true;
-                    if (clip.Frames[_index].AKey != KeyType.NotKey) _newSD.a = true;
-                    break;
-                case 1:
-                    if (clip.Frames[_index].XKey != KeyType.NotKey) _newSD.x = true;
-                    break;
-                case 2:
-                    if (clip.Frames[_index].YKey != KeyType.NotKey) _newSD.y = true;
-                    break;
-                case 3:
-                    if (clip.Frames[_index].AKey != KeyType.NotKey) _newSD.a = true;
-                    break;
-                default:
-                    Debug.LogWarning("SelectionKeyFrameAdd wrong  paraType int =" + _paraType);
-                    break;
-            }
-
-            SelectionKeyFrame.Add(_newSD);
-            }
-        }
-
-
-        public SelectedKeyData GetSelectedData(int _index)
-        {
-            for (int i = 0; i < SelectionKeyFrame.Count; i++)
-            {
-                if (SelectionKeyFrame[i].Index == _index)
-                {
-                    return SelectionKeyFrame[i];
-                }
-            }
-            return null;
-        }
+        atlas.LoadEditorAminaAtlas(_atlas);
+        Selection.activeObject = atlas.atlas;
+        GetRightBlockFrameMaxNumber();
     }
-
-    /*
-        public int GetSelectKey(int _index)
-        {
-            return SelectionKeyFrame[_index];
-        }*/
-
-
 
 }
 

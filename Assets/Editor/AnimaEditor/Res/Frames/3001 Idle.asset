@@ -1,0 +1,341 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9cd6cea52c24f5b40a73ef513a9d9ebb, type: 3}
+  m_Name: 3001 Idle
+  m_EditorClassIdentifier: 
+  ID: 3001
+  CompID: 3
+  Name: Idle
+  PauseTime: 
+  AdvanceEnd: 0
+  Frames:
+  - Index: 0
+    x: 0.21651077
+    y: 0.16499999
+    angle: 64
+    XKey: 1
+    YKey: 1
+    AKey: 1
+  - Index: 1
+    x: 0.21785034
+    y: 0.16479999
+    angle: 64.15956
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 2
+    x: 0.21918991
+    y: 0.16459998
+    angle: 64.31912
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 3
+    x: 0.22052948
+    y: 0.16439998
+    angle: 64.47868
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 4
+    x: 0.22186905
+    y: 0.16419998
+    angle: 64.638245
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 5
+    x: 0.22320862
+    y: 0.16399997
+    angle: 64.797806
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 6
+    x: 0.22454819
+    y: 0.16379997
+    angle: 64.95737
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 7
+    x: 0.22588776
+    y: 0.16359997
+    angle: 65.11693
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 8
+    x: 0.22722733
+    y: 0.16339996
+    angle: 65.27649
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 9
+    x: 0.2285669
+    y: 0.16319996
+    angle: 65.43605
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 10
+    x: 0.22990647
+    y: 0.16299996
+    angle: 65.59561
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 11
+    x: 0.23124604
+    y: 0.16279995
+    angle: 65.75517
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 12
+    x: 0.23258561
+    y: 0.16259995
+    angle: 65.914734
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 13
+    x: 0.23392518
+    y: 0.16239995
+    angle: 66.074295
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 14
+    x: 0.23526475
+    y: 0.16219994
+    angle: 66.23386
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 15
+    x: 0.23660432
+    y: 0.16199994
+    angle: 66.39342
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 16
+    x: 0.23794389
+    y: 0.16179994
+    angle: 66.55298
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 17
+    x: 0.23928346
+    y: 0.16159993
+    angle: 66.71254
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 18
+    x: 0.24062303
+    y: 0.16139993
+    angle: 66.8721
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 19
+    x: 0.2419626
+    y: 0.16119993
+    angle: 67.03166
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 20
+    x: 0.24330217
+    y: 0.16099992
+    angle: 67.19122
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 21
+    x: 0.24464174
+    y: 0.16079992
+    angle: 67.350784
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 22
+    x: 0.2459813
+    y: 0.16059992
+    angle: 67.510345
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 23
+    x: 0.24732088
+    y: 0.16039991
+    angle: 67.66991
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 24
+    x: 0.24866045
+    y: 0.16019991
+    angle: 67.82947
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 25
+    x: 0.25
+    y: 0.16
+    angle: 67.989006
+    XKey: 1
+    YKey: 1
+    AKey: 1
+  - Index: 26
+    x: 0.24832554
+    y: 0.16025
+    angle: 67.78958
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 27
+    x: 0.24665108
+    y: 0.16049999
+    angle: 67.59016
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 28
+    x: 0.24497662
+    y: 0.16074999
+    angle: 67.39073
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 29
+    x: 0.24330217
+    y: 0.16099998
+    angle: 67.19131
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 30
+    x: 0.24162771
+    y: 0.16124998
+    angle: 66.99188
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 31
+    x: 0.23995325
+    y: 0.16149998
+    angle: 66.79246
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 32
+    x: 0.23827879
+    y: 0.16174997
+    angle: 66.59303
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 33
+    x: 0.23660433
+    y: 0.16199997
+    angle: 66.39361
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 34
+    x: 0.23492987
+    y: 0.16224997
+    angle: 66.19418
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 35
+    x: 0.23325542
+    y: 0.16249996
+    angle: 65.99476
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 36
+    x: 0.23158096
+    y: 0.16274996
+    angle: 65.795334
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 37
+    x: 0.2299065
+    y: 0.16299996
+    angle: 65.59591
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 38
+    x: 0.22823204
+    y: 0.16324995
+    angle: 65.396484
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 39
+    x: 0.22655758
+    y: 0.16349995
+    angle: 65.19706
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 40
+    x: 0.22488312
+    y: 0.16374995
+    angle: 64.997635
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 41
+    x: 0.22320867
+    y: 0.16399994
+    angle: 64.79821
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 42
+    x: 0.22153421
+    y: 0.16424994
+    angle: 64.598785
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 43
+    x: 0.21985975
+    y: 0.16449994
+    angle: 64.39936
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 44
+    x: 0.21818529
+    y: 0.16474994
+    angle: 64.200005
+    XKey: 1
+    YKey: 1
+    AKey: 1
+  GeneralKeysIndex: 00000000190000002c000000
+  OutData: []
+  defaultAminaFrame:
+    x: 0.21651077
+    y: 0.16499999
+    angle: 63.999992

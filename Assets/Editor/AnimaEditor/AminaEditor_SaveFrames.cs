@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
@@ -163,7 +163,8 @@ public class AminaEditor_SaveFrames : EditorWindow
             
             if (clipsPath.ContainsKey(_id))
             {
-                AssetDatabase.DeleteAsset(clipsPath[_id]);
+                //AssetDatabase.DeleteAsset(clipsPath[_id]);
+                AnimaFilesRecycle.DeleteFrames(clipsPath[_id]);
             }
             saveClip.ID = _id;
             saveClip.Name = saveName;
@@ -205,7 +206,8 @@ public class AminaEditor_SaveFrames : EditorWindow
     {
         int _i = (int)_index;
         int _id = allClips[_i].ID;
-        AssetDatabase.DeleteAsset(clipsPath[_id]);
+        //AssetDatabase.DeleteAsset(clipsPath[_id]);
+        AnimaFilesRecycle.DeleteFrames(clipsPath[_id]);
         allClips.RemoveAt(_i);
         clipsPath.Remove(_id);
         selGrid = new Rect(0, 10, position.width, clipHeight * allClips.Count);

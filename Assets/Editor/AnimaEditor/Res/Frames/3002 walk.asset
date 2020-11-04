@@ -1,0 +1,243 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9cd6cea52c24f5b40a73ef513a9d9ebb, type: 3}
+  m_Name: 3002 walk
+  m_EditorClassIdentifier: 
+  ID: 3002
+  CompID: 3
+  Name: walk
+  PauseTime: 
+  AdvanceEnd: 1
+  Frames:
+  - Index: 0
+    x: 0.219
+    y: 0.133
+    angle: 2.84
+    XKey: 6
+    YKey: 5
+    AKey: 1
+  - Index: 1
+    x: 0.19519025
+    y: 0.13357666
+    angle: -0.6047144
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 2
+    x: 0.17257442
+    y: 0.13527772
+    angle: -4.049429
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 3
+    x: 0.15228659
+    y: 0.13801788
+    angle: -7.4941435
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 4
+    x: 0.13534403
+    y: 0.14165974
+    angle: -10.938858
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 5
+    x: 0.12259633
+    y: 0.14602068
+    angle: -14.383573
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 6
+    x: 0.11468272
+    y: 0.15088202
+    angle: -17.828287
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 7
+    x: 0.112
+    y: 0.156
+    angle: -21.273
+    XKey: 6
+    YKey: 5
+    AKey: 1
+  - Index: 8
+    x: 0.11405598
+    y: 0.15151292
+    angle: -18.258875
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 9
+    x: 0.120144896
+    y: 0.14719829
+    angle: -15.24475
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 10
+    x: 0.13003276
+    y: 0.14322188
+    angle: -12.230625
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 11
+    x: 0.14333957
+    y: 0.13973655
+    angle: -9.2165
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 12
+    x: 0.15955399
+    y: 0.1368762
+    angle: -6.2023754
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 13
+    x: 0.17805287
+    y: 0.13475077
+    angle: -3.1882503
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 14
+    x: 0.19812535
+    y: 0.13344194
+    angle: -0.1741252
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 15
+    x: 0.219
+    y: 0.133
+    angle: 2.84
+    XKey: 6
+    YKey: 5
+    AKey: 1
+  - Index: 16
+    x: 0.24147461
+    y: 0.13462968
+    angle: 7.532858
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 17
+    x: 0.26282227
+    y: 0.13943703
+    angle: 12.225716
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 18
+    x: 0.28197247
+    y: 0.14718096
+    angle: 16.918573
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 19
+    x: 0.297965
+    y: 0.15747316
+    angle: 21.611431
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 20
+    x: 0.30999786
+    y: 0.16979755
+    angle: 26.304289
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 21
+    x: 0.31746772
+    y: 0.18353614
+    angle: 30.997147
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 22
+    x: 0.32
+    y: 0.198
+    angle: 35.690002
+    XKey: 6
+    YKey: 5
+    AKey: 1
+  - Index: 23
+    x: 0.3180593
+    y: 0.18364823
+    angle: 31.583752
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 24
+    x: 0.31231183
+    y: 0.17078033
+    angle: 27.4775
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 25
+    x: 0.30297843
+    y: 0.15957467
+    angle: 23.37125
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 26
+    x: 0.2904178
+    y: 0.15018661
+    angle: 19.265
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 27
+    x: 0.27511257
+    y: 0.14274628
+    angle: 15.158749
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 28
+    x: 0.25765103
+    y: 0.13735685
+    angle: 11.052498
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 29
+    x: 0.23870412
+    y: 0.134093
+    angle: 6.9462476
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 30
+    x: 0.219
+    y: 0.133
+    angle: 2.84
+    XKey: 6
+    YKey: 5
+    AKey: 1
+  GeneralKeysIndex: 00000000070000000f000000160000001e000000
+  OutData: []
+  defaultAminaFrame:
+    x: 0.21651077
+    y: 0.16499999
+    angle: 63.999992

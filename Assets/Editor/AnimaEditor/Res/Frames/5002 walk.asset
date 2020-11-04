@@ -1,0 +1,243 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9cd6cea52c24f5b40a73ef513a9d9ebb, type: 3}
+  m_Name: 5002 walk
+  m_EditorClassIdentifier: 
+  ID: 5002
+  CompID: 5
+  Name: walk
+  PauseTime: 
+  AdvanceEnd: 1
+  Frames:
+  - Index: 0
+    x: 0.037333332
+    y: -0.054666664
+    angle: 1.8320001
+    XKey: 1
+    YKey: 1
+    AKey: 1
+  - Index: 1
+    x: 0.052
+    y: -0.053999998
+    angle: 3.7860003
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 2
+    x: 0.06666667
+    y: -0.05333333
+    angle: 5.7400002
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 3
+    x: 0.08133334
+    y: -0.052666664
+    angle: 7.6940002
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 4
+    x: 0.09600001
+    y: -0.051999997
+    angle: 9.648001
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 5
+    x: 0.11066668
+    y: -0.05133333
+    angle: 11.602001
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 6
+    x: 0.12533334
+    y: -0.050666664
+    angle: 13.556002
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 7
+    x: 0.14
+    y: -0.05
+    angle: 15.51
+    XKey: 1
+    YKey: 1
+    AKey: 1
+  - Index: 8
+    x: 0.12833333
+    y: -0.041666668
+    angle: 10.41
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 9
+    x: 0.11666666
+    y: -0.033333335
+    angle: 5.31
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 10
+    x: 0.10499999
+    y: -0.025000002
+    angle: 0.21000004
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 11
+    x: 0.09333332
+    y: -0.01666667
+    angle: -4.89
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 12
+    x: 0.08166665
+    y: -0.008333336
+    angle: -9.99
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 13
+    x: 0.07
+    y: 0
+    angle: -15.09
+    XKey: 1
+    YKey: 1
+    AKey: 1
+  - Index: 14
+    x: 0.054444443
+    y: -0.0055555557
+    angle: -15.09
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 15
+    x: 0.038888887
+    y: -0.011111111
+    angle: -15.090001
+    XKey: 1
+    YKey: 1
+    AKey: 1
+  - Index: 16
+    x: 0.023333332
+    y: -0.016666668
+    angle: -15.090001
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 17
+    x: 0.0077777766
+    y: -0.022222223
+    angle: -15.090001
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 18
+    x: -0.0077777784
+    y: -0.027777778
+    angle: -15.090001
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 19
+    x: -0.023333333
+    y: -0.033333335
+    angle: -15.090001
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 20
+    x: -0.038888887
+    y: -0.03888889
+    angle: -15.090001
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 21
+    x: -0.05444444
+    y: -0.044444446
+    angle: -15.090001
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 22
+    x: -0.07
+    y: -0.05
+    angle: -15.09
+    XKey: 1
+    YKey: 1
+    AKey: 1
+  - Index: 23
+    x: -0.056583334
+    y: -0.050583333
+    angle: -12.9747505
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 24
+    x: -0.043166667
+    y: -0.051166665
+    angle: -10.859501
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 25
+    x: -0.02975
+    y: -0.051749997
+    angle: -8.744251
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 26
+    x: -0.016333334
+    y: -0.05233333
+    angle: -6.629001
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 27
+    x: -0.0029166676
+    y: -0.05291666
+    angle: -4.513751
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 28
+    x: 0.010499999
+    y: -0.053499993
+    angle: -2.398501
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 29
+    x: 0.023916665
+    y: -0.054083325
+    angle: -0.2832508
+    XKey: 0
+    YKey: 0
+    AKey: 0
+  - Index: 30
+    x: 0.037333332
+    y: -0.054666664
+    angle: 1.8320001
+    XKey: 1
+    YKey: 1
+    AKey: 1
+  GeneralKeysIndex: 00000000070000000d0000000f000000160000001e000000
+  OutData: []
+  defaultAminaFrame:
+    x: 0.09295893
+    y: -0.063918084
+    angle: 0.02048135

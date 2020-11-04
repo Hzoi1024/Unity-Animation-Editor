@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
@@ -34,15 +34,15 @@ public class EditorDataBilnary:Editor
             }
         }
 
-        string path = Application.dataPath + "/BilnareData/";
+        string path = Application.dataPath + "/Editor/AB_Res/Animations/";
         if (Directory.Exists(path)) Directory.Delete(path, true);
         Directory.CreateDirectory(path);
 
         IFormatter f = new BinaryFormatter();
-        Stream s = new FileStream(path+ "AnimationClips.bytes", FileMode.OpenOrCreate, FileAccess.Write, FileShare.Write);
+        Stream s = new FileStream(path+ "ComponentClips.bytes", FileMode.OpenOrCreate, FileAccess.Write, FileShare.Write);
         f.Serialize(s, container);
         s.Close();
-
+        Debug.LogWarning("anima data finished");
     }
 
     public static AminaComponentClipData EditorDataToClipData(EditorAminaComponentClip _eac)
@@ -63,8 +63,9 @@ public class EditorDataBilnary:Editor
             _eac.PauseTime = null;
         }
 
-        _new.frames = new AminaFrame[_eac.Frames.Count];
-        for (int i=0;i< _eac.Frames.Count; i++)
+        int _maxFrames = _eac.Frames.Count - _eac.AdvanceEnd;
+        _new.frames = new AminaFrame[_maxFrames];
+        for (int i=0;i< _maxFrames; i++)
         {
             AminaFrame _af = new AminaFrame();
             _af.x = _eac.Frames[i].x;
