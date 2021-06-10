@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b840a033a4a1217458a585e4af916cd4, type: 3}
+  m_Name: '[frames]1 Lancer(19)'
+  m_EditorClassIdentifier: Assembly-CSharp-Editor::AnimaDataCharactorScritable
+  ChID: 0
+  Clips: []
+  ChName: 
+  isFace: 0

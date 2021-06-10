@@ -1,0 +1,69 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: '[frames]1 Lancer(4)'
+  m_EditorClassIdentifier: Assembly-CSharp-Editor::AnimaDataCharactorScritable
+  ChID: 1
+  Clips:
+  - FPS: 30
+    CharactorType: 2
+    Frames:
+    - index: 1
+      sprite: {fileID: -4374535383593129061, guid: 0507f32bf8e371346a095067b525c8a1,
+        type: 3}
+      alpha: 100
+    - index: 2
+      sprite: {fileID: 44719661956320365, guid: 0507f32bf8e371346a095067b525c8a1,
+        type: 3}
+      alpha: 100
+    - index: 3
+      sprite: {fileID: 7649138901076996107, guid: 0507f32bf8e371346a095067b525c8a1,
+        type: 3}
+      alpha: 100
+    - index: 4
+      sprite: {fileID: -6180012473097896775, guid: 0507f32bf8e371346a095067b525c8a1,
+        type: 3}
+      alpha: 100
+    - index: 5
+      sprite: {fileID: -1303882734163015892, guid: 0507f32bf8e371346a095067b525c8a1,
+        type: 3}
+      alpha: 100
+    - index: 6
+      sprite: {fileID: -3949596422933213150, guid: 0507f32bf8e371346a095067b525c8a1,
+        type: 3}
+      alpha: 100
+    - index: 7
+      sprite: {fileID: -2556550591230987798, guid: 0507f32bf8e371346a095067b525c8a1,
+        type: 3}
+      alpha: 100
+    - index: 8
+      sprite: {fileID: -4032191747515170906, guid: 0507f32bf8e371346a095067b525c8a1,
+        type: 3}
+      alpha: 100
+    - index: 9
+      sprite: {fileID: 2053405696099864711, guid: 0507f32bf8e371346a095067b525c8a1,
+        type: 3}
+      alpha: 100
+    - index: 10
+      sprite: {fileID: -5043775700377962108, guid: 0507f32bf8e371346a095067b525c8a1,
+        type: 3}
+      alpha: 100
+    - index: 11
+      sprite: {fileID: 653355946319552260, guid: 0507f32bf8e371346a095067b525c8a1,
+        type: 3}
+      alpha: 100
+    - index: 12
+      sprite: {fileID: 4011083412992605713, guid: 0507f32bf8e371346a095067b525c8a1,
+        type: 3}
+      alpha: 100
+    Output: []
+  ChName: Lancer

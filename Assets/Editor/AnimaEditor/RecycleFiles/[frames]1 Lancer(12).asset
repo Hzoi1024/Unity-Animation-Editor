@@ -1,0 +1,250 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: '[frames]1 Lancer(12)'
+  m_EditorClassIdentifier: Assembly-CSharp-Editor::AnimaDataCharactorScritable
+  ChID: 1
+  Clips:
+  - FPS: 30
+    CharactorType: 3
+    Frames:
+    - index: 1
+      sprite: {fileID: 7884558913967001286, guid: 0507f32bf8e371346a095067b525c8a1,
+        type: 3}
+      alpha: 100
+      facePos: {x: -0.050000038, y: 0.14, z: 0}
+    - index: 2
+      sprite: {fileID: 9214053567784015528, guid: 0507f32bf8e371346a095067b525c8a1,
+        type: 3}
+      alpha: 100
+      facePos: {x: -0.05, y: 0.135, z: 182.18738}
+    - index: 3
+      sprite: {fileID: 830956060663736008, guid: 0507f32bf8e371346a095067b525c8a1,
+        type: 3}
+      alpha: 100
+      facePos: {x: -0.045, y: 0.125, z: 192.88329}
+    - index: 4
+      sprite: {fileID: 7181693279437593849, guid: 0507f32bf8e371346a095067b525c8a1,
+        type: 3}
+      alpha: 100
+      facePos: {x: -0.04, y: 0.12, z: 0}
+    - index: 5
+      sprite: {fileID: -8280459225005877906, guid: 0507f32bf8e371346a095067b525c8a1,
+        type: 3}
+      alpha: 100
+      facePos: {x: -0.04, y: 0.115, z: 182.18738}
+    - index: 6
+      sprite: {fileID: -1807419610479865040, guid: 0507f32bf8e371346a095067b525c8a1,
+        type: 3}
+      alpha: 100
+      facePos: {x: -0.04, y: 0.10500008, z: 182.18738}
+    - index: 7
+      sprite: {fileID: 549663438971112104, guid: 0507f32bf8e371346a095067b525c8a1,
+        type: 3}
+      alpha: 100
+      facePos: {x: -0.040000077, y: 0.095, z: 182.18738}
+    - index: 8
+      sprite: {fileID: -5710524316300342989, guid: 0507f32bf8e371346a095067b525c8a1,
+        type: 3}
+      alpha: 100
+      facePos: {x: -0.040000077, y: 0.095, z: 182.18738}
+    - index: 9
+      sprite: {fileID: 1791628096702579355, guid: 0507f32bf8e371346a095067b525c8a1,
+        type: 3}
+      alpha: 100
+      facePos: {x: -0.040000077, y: 0.095, z: 182.18738}
+    - index: 10
+      sprite: {fileID: 8326659374832909793, guid: 0507f32bf8e371346a095067b525c8a1,
+        type: 3}
+      alpha: 100
+      facePos: {x: -0.040000077, y: 0.095, z: 182.18738}
+    - index: 11
+      sprite: {fileID: 7727942500800972887, guid: 0507f32bf8e371346a095067b525c8a1,
+        type: 3}
+      alpha: 100
+      facePos: {x: -0.040000077, y: 0.095, z: 182.18738}
+    - index: 12
+      sprite: {fileID: 6848623742190510997, guid: 0507f32bf8e371346a095067b525c8a1,
+        type: 3}
+      alpha: 100
+      facePos: {x: -0.040000077, y: 0.095, z: 182.18738}
+    - index: 13
+      sprite: {fileID: 654897480546491775, guid: 0507f32bf8e371346a095067b525c8a1,
+        type: 3}
+      alpha: 100
+      facePos: {x: -0.02, y: 0.145, z: 182.151}
+    - index: 14
+      sprite: {fileID: -1362176346108392813, guid: 0507f32bf8e371346a095067b525c8a1,
+        type: 3}
+      alpha: 100
+      facePos: {x: 0.01, y: 0.2, z: 97.774536}
+    - index: 15
+      sprite: {fileID: -6107990550828472096, guid: 0507f32bf8e371346a095067b525c8a1,
+        type: 3}
+      alpha: 100
+      facePos: {x: 0.01, y: 0.2, z: 97.774536}
+    - index: 16
+      sprite: {fileID: 2691219854807585275, guid: 0507f32bf8e371346a095067b525c8a1,
+        type: 3}
+      alpha: 100
+      facePos: {x: 0.015, y: 0.2, z: 33.831665}
+    - index: 17
+      sprite: {fileID: 2619677110479851552, guid: 0507f32bf8e371346a095067b525c8a1,
+        type: 3}
+      alpha: 100
+      facePos: {x: 0.015, y: 0.2, z: 33.831665}
+    - index: 18
+      sprite: {fileID: -3819679690632783588, guid: 0507f32bf8e371346a095067b525c8a1,
+        type: 3}
+      alpha: 100
+      facePos: {x: 0.015, y: 0.2, z: 33.831665}
+    - index: 19
+      sprite: {fileID: 1898662449854382943, guid: 0507f32bf8e371346a095067b525c8a1,
+        type: 3}
+      alpha: 100
+      facePos: {x: 0.005, y: 0.19, z: 33.831665}
+    - index: 20
+      sprite: {fileID: 7113084926935658802, guid: 0507f32bf8e371346a095067b525c8a1,
+        type: 3}
+      alpha: 100
+      facePos: {x: -0.005, y: 0.18, z: 38.625122}
+    - index: 21
+      sprite: {fileID: 1343396011700401805, guid: 0507f32bf8e371346a095067b525c8a1,
+        type: 3}
+      alpha: 100
+      facePos: {x: -0.01, y: 0.175, z: 182.151}
+    - index: 22
+      sprite: {fileID: -1936621437220805455, guid: 0507f32bf8e371346a095067b525c8a1,
+        type: 3}
+      alpha: 100
+      facePos: {x: -0.02, y: 0.165, z: 182.151}
+    - index: 23
+      sprite: {fileID: 2249543892645395189, guid: 0507f32bf8e371346a095067b525c8a1,
+        type: 3}
+      alpha: 100
+      facePos: {x: -0.025, y: 0.16, z: 24.44571}
+    - index: 24
+      sprite: {fileID: 9094600333029325441, guid: 0507f32bf8e371346a095067b525c8a1,
+        type: 3}
+      alpha: 100
+      facePos: {x: -0.03, y: 0.155, z: 182.18738}
+    - index: 25
+      sprite: {fileID: -2709386181722979916, guid: 0507f32bf8e371346a095067b525c8a1,
+        type: 3}
+      alpha: 100
+      facePos: {x: -0.04, y: 0.15, z: 0}
+    - index: 26
+      sprite: {fileID: -1221690452521703938, guid: 0507f32bf8e371346a095067b525c8a1,
+        type: 3}
+      alpha: 100
+      facePos: {x: -0.050000038, y: 0.14, z: 0}
+    Output: []
+  - FPS: 30
+    CharactorType: 1
+    Frames:
+    - index: 1
+      sprite: {fileID: -8339644512344154145, guid: 0507f32bf8e371346a095067b525c8a1,
+        type: 3}
+      alpha: 100
+      facePos: {x: -0.04500004, y: 0.14, z: 0}
+    - index: 2
+      sprite: {fileID: 8992374066183145774, guid: 0507f32bf8e371346a095067b525c8a1,
+        type: 3}
+      alpha: 100
+      facePos: {x: -0.055000037, y: 0.13, z: 0}
+    - index: 3
+      sprite: {fileID: -9143910153275735632, guid: 0507f32bf8e371346a095067b525c8a1,
+        type: 3}
+      alpha: 100
+      facePos: {x: -0.07500004, y: 0.12, z: 0}
+    - index: 4
+      sprite: {fileID: -1821606051341894875, guid: 0507f32bf8e371346a095067b525c8a1,
+        type: 3}
+      alpha: 100
+      facePos: {x: -0.085, y: 0.11, z: 0}
+    - index: 5
+      sprite: {fileID: -5613415336531031273, guid: 0507f32bf8e371346a095067b525c8a1,
+        type: 3}
+      alpha: 100
+      facePos: {x: -0.07500004, y: 0.12, z: 0}
+    - index: 6
+      sprite: {fileID: -209988768739561459, guid: 0507f32bf8e371346a095067b525c8a1,
+        type: 3}
+      alpha: 100
+      facePos: {x: -0.055000037, y: 0.13, z: 0}
+    Output: []
+  - FPS: 30
+    CharactorType: 2
+    Frames:
+    - index: 1
+      sprite: {fileID: -5588913926968914566, guid: 0507f32bf8e371346a095067b525c8a1,
+        type: 3}
+      alpha: 100
+      facePos: {x: -0.065, y: 0.03, z: 0}
+    - index: 2
+      sprite: {fileID: -5123683322510342338, guid: 0507f32bf8e371346a095067b525c8a1,
+        type: 3}
+      alpha: 100
+      facePos: {x: -0.065, y: 0.04, z: 0}
+    - index: 3
+      sprite: {fileID: -8194951434571663993, guid: 0507f32bf8e371346a095067b525c8a1,
+        type: 3}
+      alpha: 100
+      facePos: {x: -0.065, y: 0.05, z: 0}
+    - index: 4
+      sprite: {fileID: -7914066870833731535, guid: 0507f32bf8e371346a095067b525c8a1,
+        type: 3}
+      alpha: 100
+      facePos: {x: -0.065, y: 0.04, z: 0}
+    - index: 5
+      sprite: {fileID: 621985416411015412, guid: 0507f32bf8e371346a095067b525c8a1,
+        type: 3}
+      alpha: 100
+      facePos: {x: -0.065, y: 0.03, z: 0}
+    - index: 6
+      sprite: {fileID: 6034739340253588865, guid: 0507f32bf8e371346a095067b525c8a1,
+        type: 3}
+      alpha: 100
+      facePos: {x: -0.065, y: 0.02, z: 0}
+    - index: 7
+      sprite: {fileID: -8998022636415766636, guid: 0507f32bf8e371346a095067b525c8a1,
+        type: 3}
+      alpha: 100
+      facePos: {x: -0.065, y: 0.04, z: 0}
+    - index: 8
+      sprite: {fileID: -1936183418303612421, guid: 0507f32bf8e371346a095067b525c8a1,
+        type: 3}
+      alpha: 100
+      facePos: {x: -0.065, y: 0.05, z: 0}
+    - index: 9
+      sprite: {fileID: -642840353287664488, guid: 0507f32bf8e371346a095067b525c8a1,
+        type: 3}
+      alpha: 100
+      facePos: {x: -0.065, y: 0.05, z: 0}
+    - index: 10
+      sprite: {fileID: -6309358094316359768, guid: 0507f32bf8e371346a095067b525c8a1,
+        type: 3}
+      alpha: 100
+      facePos: {x: -0.065, y: 0.04, z: 0}
+    - index: 11
+      sprite: {fileID: 5018232491372004571, guid: 0507f32bf8e371346a095067b525c8a1,
+        type: 3}
+      alpha: 100
+      facePos: {x: -0.065, y: 0.04, z: 0}
+    - index: 12
+      sprite: {fileID: 6967635448606720328, guid: 0507f32bf8e371346a095067b525c8a1,
+        type: 3}
+      alpha: 100
+      facePos: {x: -0.065, y: 0.03, z: 0}
+    Output: []
+  ChName: Lancer
+  isFace: 1
